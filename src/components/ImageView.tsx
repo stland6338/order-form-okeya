@@ -23,9 +23,10 @@ function pct(x: number, y: number, w: number, h: number) {
 // ピクセル単位の正確なセル境界（strongHLine/strongVLineで測定済み）
 // 垂直線(x): 493, 544, 721, 772, 959, 1426, 1892, 2359, 2826, 2929, 3395, 3862
 
-// セットA: x=494〜543 (w=49)  セットB: x=722〜771 (w=49)
-const COL_SET_A = { x: 495, w: 48 };
-const COL_SET_B = { x: 723, w: 48 };
+// セットA/B: メンバー名右端(x=494)〜次の列(x=959)を均等2分割
+// 画像の48pxチェックボックスセルは画面上10pxで小さすぎるため拡大
+const COL_SET_A = { x: 497, w: 228 };
+const COL_SET_B = { x: 729, w: 228 };
 
 const P = 4;
 const COL_PRODUCTS = [
@@ -46,13 +47,13 @@ const MEMBERS_ROW = [
   { y: 2230, h: 172 }, // ルンルン 2228→2404
 ];
 
-// 共通商品: フレークシール x=148〜493, アクリルパーツ x=497〜959
-// 入力セル: y=2643〜2821
-const COMMON_Y = 2643;
-const COMMON_H = 176;
+// 共通商品: フレークシール x=145〜493, アクリルパーツ x=497〜959
+// 商品名行下(y=2559)〜ボックス下端(y=2821)
+const COMMON_Y = 2562;
+const COMMON_H = 256;
 const COMMON_COLS = [
-  { x: 148, w: 343 },
-  { x: 497, w: 460 },
+  { x: 145, w: 346 },
+  { x: 495, w: 462 },
 ];
 
 function OverlayInput({
