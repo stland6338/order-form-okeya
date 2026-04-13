@@ -58,7 +58,7 @@ export function MemberSection({
                   >
                     -
                   </button>
-                  <span className={`w-6 text-center font-mono text-xl font-bold ${qty > 0 ? "text-gray-900" : "text-gray-400"}`}>{qty}</span>
+                  <span className={`w-8 text-center font-mono text-xl font-bold ${qty > 0 ? "text-gray-900" : "text-gray-400"}`}>{qty}</span>
                   <button
                     onClick={() => {
                       if (totalSets >= MAX_SETS_PER_ORDER) return;
