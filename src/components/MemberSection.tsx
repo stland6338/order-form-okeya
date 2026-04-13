@@ -15,9 +15,6 @@ export function MemberSection({
   adjustQuantity,
   totalSets,
 }: MemberSectionProps) {
-  const setA = getQuantity(member.id, `${member.set.id}-A`);
-  const setB = getQuantity(member.id, `${member.set.id}-B`);
-
   return (
     <div
       className="border-2 rounded-lg overflow-hidden"
@@ -74,7 +71,7 @@ export function MemberSection({
           </div>
         );
       })}
-      {totalSets >= MAX_SETS_PER_ORDER && setA === 0 && setB === 0 && (
+      {totalSets >= MAX_SETS_PER_ORDER && (
         <div className="px-3 py-1 bg-red-50 border-b border-gray-100">
           <p className="text-xs text-red-500 font-bold">※セットはメンバー問わず1会計につき合計2個までです</p>
         </div>
