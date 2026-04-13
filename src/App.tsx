@@ -23,6 +23,7 @@ function App() {
     setQuantity,
     setCommonQuantity,
     adjustQuantity,
+    adjustCommonQuantity,
     getQuantity,
     getCommonQuantity,
     resetOrder,
@@ -110,14 +111,13 @@ function App() {
                 key={member.id}
                 member={member}
                 getQuantity={getQuantity}
-                setQuantity={setQuantity}
                 adjustQuantity={adjustQuantity}
                 totalSets={totalSets}
               />
             ))}
             <CommonSection
               getCommonQuantity={getCommonQuantity}
-              setCommonQuantity={setCommonQuantity}
+              adjustCommonQuantity={adjustCommonQuantity}
             />
           </div>
         </>

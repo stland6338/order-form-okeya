@@ -3,12 +3,12 @@ import { ProductRow } from "./ProductRow";
 
 interface CommonSectionProps {
   getCommonQuantity: (productId: string) => number;
-  setCommonQuantity: (productId: string, quantity: number) => void;
+  adjustCommonQuantity: (productId: string, delta: number) => void;
 }
 
 export function CommonSection({
   getCommonQuantity,
-  setCommonQuantity,
+  adjustCommonQuantity,
 }: CommonSectionProps) {
   return (
     <div
@@ -29,7 +29,7 @@ export function CommonSection({
             price={product.price}
             inSet={product.inSet}
             quantity={getCommonQuantity(product.id)}
-            onChange={(q) => setCommonQuantity(product.id, q)}
+            onAdjust={(delta) => adjustCommonQuantity(product.id, delta)}
           />
         ))}
       </div>

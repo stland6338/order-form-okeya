@@ -3,10 +3,10 @@ interface ProductRowProps {
   price: number;
   inSet: boolean;
   quantity: number;
-  onChange: (quantity: number) => void;
+  onAdjust: (delta: number) => void;
 }
 
-export function ProductRow({ name, price, inSet, quantity, onChange }: ProductRowProps) {
+export function ProductRow({ name, price, inSet, quantity, onAdjust }: ProductRowProps) {
   const active = quantity > 0;
 
   return (
@@ -26,7 +26,7 @@ export function ProductRow({ name, price, inSet, quantity, onChange }: ProductRo
       </div>
       <div className="flex items-center gap-2">
         <button
-          onClick={() => onChange(quantity - 1)}
+          onClick={() => onAdjust(-1)}
           disabled={quantity <= 0}
           className="w-9 h-9 rounded-full bg-gray-300 text-gray-800 font-bold text-xl flex items-center justify-center disabled:opacity-25 active:bg-gray-400"
         >
@@ -36,7 +36,7 @@ export function ProductRow({ name, price, inSet, quantity, onChange }: ProductRo
           {quantity}
         </span>
         <button
-          onClick={() => onChange(quantity + 1)}
+          onClick={() => onAdjust(+1)}
           className="w-9 h-9 rounded-full bg-gray-800 text-white font-bold text-xl flex items-center justify-center active:bg-gray-900"
         >
           +

@@ -5,7 +5,6 @@ import { ProductRow } from "./ProductRow";
 interface MemberSectionProps {
   member: Member;
   getQuantity: (memberId: string, productId: string) => number;
-  setQuantity: (memberId: string, productId: string, quantity: number) => void;
   adjustQuantity: (memberId: string, productId: string, delta: number) => void;
   totalSets: number;
 }
@@ -13,7 +12,6 @@ interface MemberSectionProps {
 export function MemberSection({
   member,
   getQuantity,
-  setQuantity,
   adjustQuantity,
   totalSets,
 }: MemberSectionProps) {
@@ -91,7 +89,7 @@ export function MemberSection({
             price={product.price}
             inSet={product.inSet}
             quantity={getQuantity(member.id, product.id)}
-            onChange={(q) => setQuantity(member.id, product.id, q)}
+            onAdjust={(delta) => adjustQuantity(member.id, product.id, delta)}
           />
         ))}
       </div>
