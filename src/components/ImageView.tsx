@@ -75,7 +75,7 @@ function OverlayInput({
       className={`absolute text-center font-bold rounded ${
         value > 0
           ? "bg-yellow-200/80 border-2 border-yellow-500 text-gray-900"
-          : "bg-transparent"
+          : "bg-blue-200/30 border border-red-500"
       }`}
       style={{ ...style, fontSize: "clamp(10px, 2vw, 20px)" }}
     />
