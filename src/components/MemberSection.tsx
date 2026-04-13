@@ -64,10 +64,7 @@ export function MemberSection({
               </button>
               <span className={`w-8 text-center font-mono text-xl font-bold ${qty > 0 ? "text-gray-900" : "text-gray-400"}`}>{qty}</span>
               <button
-                onClick={() => {
-                  if (totalSets >= MAX_SETS_PER_ORDER) return;
-                  setQuantity(member.id, key, qty + 1);
-                }}
+                onClick={() => setQuantity(member.id, key, qty + 1)}
                 disabled={!canAdd}
                 className="w-9 h-9 rounded-full bg-gray-800 text-white font-bold text-xl flex items-center justify-center disabled:opacity-25 active:bg-gray-900"
               >

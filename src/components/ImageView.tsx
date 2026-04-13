@@ -132,29 +132,25 @@ export function ImageView({
               const setAKey = `${member.set.id}-A`;
               const setBKey = `${member.set.id}-B`;
 
-              const clampSet = (key: string, v: number) => {
+              const handleSetChange = (key: string, v: number) => {
                 const current = getQuantity(member.id, key);
-                const increase = v - current;
-                if (increase <= 0) return v;
-                const remaining = MAX_SETS_PER_ORDER - totalSets;
-                const clamped = current + Math.min(increase, remaining);
-                if (clamped < v) {
+                if (v > current && totalSets >= MAX_SETS_PER_ORDER) {
                   setShowLimitMsg(true);
                   setTimeout(() => setShowLimitMsg(false), 3000);
                 }
-                return clamped;
+                setQuantity(member.id, key, v);
               };
 
               return (
                 <div key={member.id}>
                   <OverlayInput
                     value={getQuantity(member.id, setAKey)}
-                    onChange={(v) => setQuantity(member.id, setAKey, clampSet(setAKey, v))}
+                    onChange={(v) => handleSetChange(setAKey, v)}
                     style={pos(COL_SET_A.x, y, COL_SET_A.w, h)}
                   />
                   <OverlayInput
                     value={getQuantity(member.id, setBKey)}
-                    onChange={(v) => setQuantity(member.id, setBKey, clampSet(setBKey, v))}
+                    onChange={(v) => handleSetChange(setBKey, v)}
                     style={pos(COL_SET_B.x, y, COL_SET_B.w, h)}
                   />
                   {member.products.map((p, pi) => (
