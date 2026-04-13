@@ -62,5 +62,6 @@ export const COMMON_PRODUCTS: CommonProduct[] = [
 ];
 
 export const MAX_SETS_PER_ORDER = 2;
+export const MAX_QUANTITY = 99;
 
 export const STORAGE_KEY = "okeya-order";

@@ -1,12 +1,22 @@
 import { useState, useCallback } from "react";
 import type { OrderState } from "../types";
-import { STORAGE_KEY, MEMBERS, MAX_SETS_PER_ORDER } from "../data";
+import { STORAGE_KEY, MEMBERS, MAX_SETS_PER_ORDER, MAX_QUANTITY } from "../data";
+
+function isValidOrderState(v: unknown): v is OrderState {
+  if (typeof v !== "object" || v === null) return false;
+  const obj = v as Record<string, unknown>;
+  return (
+    typeof obj.members === "object" && obj.members !== null &&
+    typeof obj.common === "object" && obj.common !== null
+  );
+}
 
 function loadOrder(): OrderState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
-      return JSON.parse(raw) as OrderState;
+      const parsed: unknown = JSON.parse(raw);
+      if (isValidOrderState(parsed)) return parsed;
     }
   } catch {
     // ignore
@@ -43,7 +53,7 @@ export function useOrderState() {
   const setQuantity = useCallback(
     (memberId: string, productId: string, quantity: number) => {
       setOrder((prev) => {
-        let qty = Math.max(0, quantity);
+        let qty = Math.min(MAX_QUANTITY, Math.max(0, quantity));
 
         // セットの場合: 最新のprevから合計を計算してクランプ
         if (isSetKey(productId)) {
@@ -80,7 +90,7 @@ export function useOrderState() {
           ...prev,
           common: {
             ...prev.common,
-            [productId]: Math.max(0, quantity),
+            [productId]: Math.min(MAX_QUANTITY, Math.max(0, quantity)),
           },
         };
         saveOrder(next);
@@ -109,7 +119,7 @@ export function useOrderState() {
     (memberId: string, productId: string, delta: number) => {
       setOrder((prev) => {
         const current = prev.members[memberId]?.[productId] ?? 0;
-        let qty = Math.max(0, current + delta);
+        let qty = Math.min(MAX_QUANTITY, Math.max(0, current + delta));
 
         if (isSetKey(productId) && delta > 0) {
           const currentTotal = countTotalSets(prev);
@@ -142,7 +152,7 @@ export function useOrderState() {
           ...prev,
           common: {
             ...prev.common,
-            [productId]: Math.max(0, current + delta),
+            [productId]: Math.min(MAX_QUANTITY, Math.max(0, current + delta)),
           },
         };
         saveOrder(next);
