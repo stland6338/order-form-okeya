@@ -32,49 +32,56 @@ export function MemberSection({
       </div>
 
       {/* セット */}
-      <div className="px-3 py-2 border-b border-gray-100 bg-white">
-        <div className="flex items-start justify-between">
-          <div className="pt-1">
-            <span className="text-sm font-medium">{member.set.name}</span>
-            <span className="text-xs text-gray-500 ml-2">
-              ¥{member.set.price.toLocaleString()}
-            </span>
-            {totalSets >= MAX_SETS_PER_ORDER && setA === 0 && setB === 0 && (
-              <p className="text-xs text-red-500 mt-1">※上限(2個)到達</p>
-            )}
+      {member.set.variants.map((variant) => {
+        const key = `${member.set.id}-${variant}`;
+        const qty = getQuantity(member.id, key);
+        const canAdd = totalSets < MAX_SETS_PER_ORDER;
+        const isFirst = variant === "A";
+        return (
+          <div
+            key={variant}
+            className={`flex items-center gap-2 px-3 py-2 border-b border-gray-100 bg-white ${
+              qty > 0 ? "bg-yellow-50" : ""
+            }`}
+          >
+            <div className="flex-1 min-w-0">
+              {isFirst && (
+                <>
+                  <span className="text-sm font-medium">{member.set.name}</span>
+                  <span className="block text-xs text-gray-500">¥{member.set.price.toLocaleString()}</span>
+                </>
+              )}
+              {!isFirst && <span className="text-sm font-medium">&nbsp;</span>}
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold w-4">{variant}</span>
+              <button
+                onClick={() => setQuantity(member.id, key, Math.max(0, qty - 1))}
+                disabled={qty <= 0}
+                className="w-9 h-9 rounded-full bg-gray-300 text-gray-800 font-bold text-xl flex items-center justify-center disabled:opacity-25 active:bg-gray-400"
+              >
+                -
+              </button>
+              <span className={`w-8 text-center font-mono text-xl font-bold ${qty > 0 ? "text-gray-900" : "text-gray-400"}`}>{qty}</span>
+              <button
+                onClick={() => {
+                  if (totalSets >= MAX_SETS_PER_ORDER) return;
+                  setQuantity(member.id, key, qty + 1);
+                }}
+                disabled={!canAdd}
+                className="w-9 h-9 rounded-full bg-gray-800 text-white font-bold text-xl flex items-center justify-center disabled:opacity-25 active:bg-gray-900"
+              >
+                +
+              </button>
+            </div>
           </div>
-          <div className="flex flex-col gap-1.5">
-            {member.set.variants.map((variant) => {
-              const key = `${member.set.id}-${variant}`;
-              const qty = getQuantity(member.id, key);
-              const canAdd = totalSets < MAX_SETS_PER_ORDER;
-              return (
-                <div key={variant} className="flex items-center gap-2">
-                  <span className="text-sm font-bold w-4">{variant}</span>
-                  <button
-                    onClick={() => setQuantity(member.id, key, Math.max(0, qty - 1))}
-                    disabled={qty <= 0}
-                    className="w-9 h-9 rounded-full bg-gray-300 text-gray-800 font-bold text-xl flex items-center justify-center disabled:opacity-25 active:bg-gray-400"
-                  >
-                    -
-                  </button>
-                  <span className={`w-8 text-center font-mono text-xl font-bold ${qty > 0 ? "text-gray-900" : "text-gray-400"}`}>{qty}</span>
-                  <button
-                    onClick={() => {
-                      if (totalSets >= MAX_SETS_PER_ORDER) return;
-                      setQuantity(member.id, key, qty + 1);
-                    }}
-                    disabled={!canAdd}
-                    className="w-9 h-9 rounded-full bg-gray-800 text-white font-bold text-xl flex items-center justify-center disabled:opacity-25 active:bg-gray-900"
-                  >
-                    +
-                  </button>
-                </div>
-              );
-            })}
-          </div>
+        );
+      })}
+      {totalSets >= MAX_SETS_PER_ORDER && setA === 0 && setB === 0 && (
+        <div className="px-3 py-1 bg-red-50 border-b border-gray-100">
+          <p className="text-xs text-red-500 font-bold">※セットは1回のお会計で2個までです</p>
         </div>
-      </div>
+      )}
 
       {/* 通常商品 */}
       <div className="bg-white">
