@@ -36,7 +36,7 @@ function QuantityInput({
 // 旧商品の左ボーダー用スタイル（太い線 + 小さなマージン風）
 const OLD_SEPARATOR = "3px solid #ccc";
 
-function SetCounter({
+function SetInput({
   label,
   value,
   canAdd,
@@ -48,25 +48,19 @@ function SetCounter({
   onChange: (v: number) => void;
 }) {
   return (
-    <div className="flex items-center gap-0.5">
-      <span className="text-[10px] text-gray-500 w-3 font-bold">{label}</span>
-      <button
-        onClick={() => onChange(Math.max(0, value - 1))}
-        disabled={value <= 0}
-        className="w-5 h-5 rounded-full bg-gray-200 text-gray-700 text-xs font-bold flex items-center justify-center disabled:opacity-30"
-      >
-        -
-      </button>
-      <span className={`w-3 text-center text-xs font-bold ${value > 0 ? "text-gray-900" : "text-gray-400"}`}>
-        {value}
-      </span>
-      <button
-        onClick={() => onChange(value + 1)}
-        disabled={!canAdd}
-        className="w-5 h-5 rounded-full bg-gray-700 text-white text-xs font-bold flex items-center justify-center disabled:opacity-30"
-      >
-        +
-      </button>
+    <div className="flex items-center gap-1">
+      <span className="text-[11px] text-gray-500 font-bold">{label}</span>
+      <input
+        type="number"
+        inputMode="numeric"
+        min={0}
+        max={canAdd ? 99 : value}
+        value={value || ""}
+        onChange={(e) => onChange(Math.max(0, parseInt(e.target.value) || 0))}
+        className={`w-full h-7 text-center text-sm font-bold border border-gray-300 rounded ${
+          value > 0 ? "bg-yellow-100 border-yellow-400" : "bg-white"
+        }`}
+      />
     </div>
   );
 }
@@ -166,8 +160,8 @@ function MemberRow({
             {/* セット A/B（縦並び） */}
             <td className="text-center align-middle p-1" style={{ borderRight: cellBorder }}>
               <div className="flex flex-col gap-1">
-                <SetCounter label="A" value={setA} canAdd={canAddSet} onChange={(v) => setQuantity(member.id, setAKey, v)} />
-                <SetCounter label="B" value={setB} canAdd={canAddSet} onChange={(v) => setQuantity(member.id, setBKey, v)} />
+                <SetInput label="A" value={setA} canAdd={canAddSet} onChange={(v) => setQuantity(member.id, setAKey, v)} />
+                <SetInput label="B" value={setB} canAdd={canAddSet} onChange={(v) => setQuantity(member.id, setBKey, v)} />
               </div>
             </td>
 
