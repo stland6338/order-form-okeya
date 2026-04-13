@@ -110,30 +110,23 @@ function SetOverlay({
   style: React.CSSProperties;
 }) {
   return (
-    <div className="absolute flex items-center justify-center gap-[3%]" style={style}>
-      <button
-        onClick={() => onChange(Math.max(0, value - 1))}
-        disabled={value <= 0}
-        className="h-[60%] aspect-square rounded-full bg-gray-300/80 text-gray-800 font-bold flex items-center justify-center disabled:opacity-25"
-        style={{ fontSize: "clamp(8px, 1.5vw, 14px)" }}
-      >
-        -
-      </button>
-      <span
-        className={`font-bold ${value > 0 ? "text-gray-900" : "text-gray-400"}`}
-        style={{ fontSize: "clamp(10px, 2vw, 18px)" }}
-      >
-        {value}
-      </span>
-      <button
-        onClick={() => onChange(value + 1)}
-        disabled={!canAdd}
-        className="h-[60%] aspect-square rounded-full bg-gray-700/80 text-white font-bold flex items-center justify-center disabled:opacity-25"
-        style={{ fontSize: "clamp(8px, 1.5vw, 14px)" }}
-      >
-        +
-      </button>
-    </div>
+    <input
+      type="number"
+      inputMode="numeric"
+      min={0}
+      max={canAdd ? 99 : value}
+      value={value || ""}
+      onChange={(e) => {
+        const v = parseInt(e.target.value) || 0;
+        onChange(Math.max(0, v));
+      }}
+      className={`absolute text-center font-bold rounded ${
+        value > 0
+          ? "bg-yellow-200/80 border-2 border-yellow-500 text-gray-900"
+          : "bg-white/50 border border-gray-300/40 text-gray-500"
+      }`}
+      style={{ ...style, fontSize: "clamp(10px, 2vw, 20px)" }}
+    />
   );
 }
 
