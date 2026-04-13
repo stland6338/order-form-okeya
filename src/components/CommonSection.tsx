@@ -11,8 +11,14 @@ export function CommonSection({
   setCommonQuantity,
 }: CommonSectionProps) {
   return (
-    <div className="border-2 border-gray-400 rounded-lg overflow-hidden">
-      <div className="bg-gray-600 text-white px-3 py-2 font-bold text-lg">
+    <div
+      className="border-2 rounded-lg overflow-hidden"
+      style={{ borderColor: "#afafaf" }}
+    >
+      <div
+        className="px-3 py-2 font-bold text-lg"
+        style={{ backgroundColor: "#afafaf", color: "#fff" }}
+      >
         共通商品
       </div>
       <div className="bg-white">

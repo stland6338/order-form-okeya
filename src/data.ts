@@ -30,29 +30,29 @@ function createMember(
 // 元画像に合わせた色定義
 export const MEMBERS: Member[] = [
   createMember("riko", "りこ", {
-    bg: "#FFE033",    // 鮮やかな黄色
-    text: "#5C4A00",
-    border: "#E6C800",
+    bg: "#e5c735",
+    text: "#4a3f00",
+    border: "#d0b42e",
   }, 1),
   createMember("nana", "ナナ", {
-    bg: "#5BADE6",    // コーンフラワーブルー
-    text: "#003366",
-    border: "#4A9AD6",
+    bg: "#83b7e2",
+    text: "#1a3a5c",
+    border: "#6fa5d4",
   }, 8),
   createMember("kisara", "綺沙良", {
-    bg: "#7DD4F0",    // スカイブルー（ナナより明るい）
-    text: "#0A4D68",
-    border: "#60C4E0",
+    bg: "#ac83cc",
+    text: "#3a1a5c",
+    border: "#9a6fbe",
   }, 15),
   createMember("moone", "桃音", {
-    bg: "#FF85B0",    // ホットピンク
-    text: "#6B0030",
-    border: "#F06898",
+    bg: "#ff9cce",
+    text: "#6b0040",
+    border: "#f080b8",
   }, 22),
   createMember("runrun", "ルンルン", {
-    bg: "#7ED957",    // ライムグリーン
-    text: "#1A5C00",
-    border: "#66C840",
+    bg: "#a5b2d3",
+    text: "#2a3050",
+    border: "#8f9cc0",
   }, 29),
 ];
 
