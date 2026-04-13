@@ -1,29 +1,15 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { MEMBERS, COMMON_PRODUCTS } from "./data";
 import { useOrderState } from "./hooks/useOrderState";
 import { Header } from "./components/Header";
-import { NotesSection } from "./components/NotesSection";
-import { MemberSection } from "./components/MemberSection";
-import { CommonSection } from "./components/CommonSection";
 import { OrderSummary } from "./components/OrderSummary";
 import { ImageView } from "./components/ImageView";
 
-type ViewMode = "image" | "list";
-
-const TABS: { mode: ViewMode; label: string }[] = [
-  { mode: "image", label: "原紙" },
-  { mode: "list", label: "リスト" },
-];
-
 function App() {
-  const [viewMode, setViewMode] = useState<ViewMode>("image");
-
   const {
     order,
     setQuantity,
     setCommonQuantity,
-    adjustQuantity,
-    adjustCommonQuantity,
     getQuantity,
     getCommonQuantity,
     resetOrder,
@@ -77,52 +63,13 @@ function App() {
     <div className="min-h-screen bg-gray-50 pb-20">
       <Header />
 
-      {/* ビュー切り替えタブ */}
-      <div className="flex border-b border-gray-200 bg-white">
-        {TABS.map((tab) => (
-          <button
-            key={tab.mode}
-            onClick={() => setViewMode(tab.mode)}
-            className={`flex-1 py-2 text-sm font-medium text-center border-b-2 transition-colors ${
-              viewMode === tab.mode
-                ? "text-gray-900"
-                : "border-transparent text-gray-400"
-            }`}
-            style={viewMode === tab.mode ? { borderColor: "#F5509F" } : undefined}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {viewMode === "image" ? (
-        <ImageView
-          getQuantity={getQuantity}
-          setQuantity={setQuantity}
-          getCommonQuantity={getCommonQuantity}
-          setCommonQuantity={setCommonQuantity}
-          totalSets={totalSets}
-        />
-      ) : (
-        <>
-          <NotesSection />
-          <div className="px-4 space-y-4 pb-4">
-            {MEMBERS.map((member) => (
-              <MemberSection
-                key={member.id}
-                member={member}
-                getQuantity={getQuantity}
-                adjustQuantity={adjustQuantity}
-                totalSets={totalSets}
-              />
-            ))}
-            <CommonSection
-              getCommonQuantity={getCommonQuantity}
-              adjustCommonQuantity={adjustCommonQuantity}
-            />
-          </div>
-        </>
-      )}
+      <ImageView
+        getQuantity={getQuantity}
+        setQuantity={setQuantity}
+        getCommonQuantity={getCommonQuantity}
+        setCommonQuantity={setCommonQuantity}
+        totalSets={totalSets}
+      />
 
       <OrderSummary
         total={total}
