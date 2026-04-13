@@ -6,14 +6,12 @@ import { NotesSection } from "./components/NotesSection";
 import { MemberSection } from "./components/MemberSection";
 import { CommonSection } from "./components/CommonSection";
 import { OrderSummary } from "./components/OrderSummary";
-import { TableView } from "./components/TableView";
 import { ImageView } from "./components/ImageView";
 
-type ViewMode = "image" | "table" | "list";
+type ViewMode = "image" | "list";
 
 const TABS: { mode: ViewMode; label: string }[] = [
   { mode: "image", label: "原紙" },
-  { mode: "table", label: "注文票" },
   { mode: "list", label: "リスト" },
 ];
 
@@ -29,7 +27,6 @@ function App() {
     resetOrder,
   } = useOrderState();
 
-  // セット合計数（全メンバー横断）
   const totalSets = useMemo(() => {
     let count = 0;
     for (const member of MEMBERS) {
@@ -41,7 +38,6 @@ function App() {
     return count;
   }, [order]);
 
-  // 合計金額・合計点数
   const { total, itemCount } = useMemo(() => {
     let total = 0;
     let itemCount = 0;
@@ -96,8 +92,6 @@ function App() {
         ))}
       </div>
 
-      {viewMode !== "image" && <NotesSection />}
-
       {viewMode === "image" ? (
         <ImageView
           getQuantity={getQuantity}
@@ -106,30 +100,25 @@ function App() {
           setCommonQuantity={setCommonQuantity}
           totalSets={totalSets}
         />
-      ) : viewMode === "table" ? (
-        <TableView
-          getQuantity={getQuantity}
-          setQuantity={setQuantity}
-          getCommonQuantity={getCommonQuantity}
-          setCommonQuantity={setCommonQuantity}
-          totalSets={totalSets}
-        />
       ) : (
-        <div className="px-4 space-y-4 pb-4">
-          {MEMBERS.map((member) => (
-            <MemberSection
-              key={member.id}
-              member={member}
-              getQuantity={getQuantity}
-              setQuantity={setQuantity}
-              totalSets={totalSets}
+        <>
+          <NotesSection />
+          <div className="px-4 space-y-4 pb-4">
+            {MEMBERS.map((member) => (
+              <MemberSection
+                key={member.id}
+                member={member}
+                getQuantity={getQuantity}
+                setQuantity={setQuantity}
+                totalSets={totalSets}
+              />
+            ))}
+            <CommonSection
+              getCommonQuantity={getCommonQuantity}
+              setCommonQuantity={setCommonQuantity}
             />
-          ))}
-          <CommonSection
-            getCommonQuantity={getCommonQuantity}
-            setCommonQuantity={setCommonQuantity}
-          />
-        </div>
+          </div>
+        </>
       )}
 
       <OrderSummary
