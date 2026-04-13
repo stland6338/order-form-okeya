@@ -52,8 +52,8 @@ const MEMBERS_ROW = [
 const COMMON_Y = 2645;
 const COMMON_H = 172;
 const COMMON_COLS = [
-  { x: 210, w: 280 },  // フレークシール (右にシフト)
-  { x: 560, w: 395 },  // アクリルパーツ (右にシフト)
+  { x: 350, w: 290 },  // フレークシール（商品名テキスト直下に合わせる）
+  { x: 700, w: 290 },  // アクリルパーツ（商品名テキスト直下に合わせる）
 ];
 
 function OverlayInput({
@@ -75,7 +75,7 @@ function OverlayInput({
       className={`absolute text-center font-bold rounded ${
         value > 0
           ? "bg-yellow-200/80 border-2 border-yellow-500 text-gray-900"
-          : "bg-blue-200/30 border border-red-500"
+          : "bg-transparent"
       }`}
       style={{ ...style, fontSize: "clamp(10px, 2vw, 20px)" }}
     />
