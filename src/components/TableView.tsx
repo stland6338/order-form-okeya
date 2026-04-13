@@ -48,27 +48,25 @@ function SetCounter({
   onChange: (v: number) => void;
 }) {
   return (
-    <div className="flex flex-col items-center gap-0.5 flex-1">
-      <span className="text-[10px] text-gray-500">{label}</span>
-      <div className="flex items-center gap-0.5">
-        <button
-          onClick={() => onChange(Math.max(0, value - 1))}
-          disabled={value <= 0}
-          className="w-5 h-5 rounded-full bg-gray-200 text-gray-700 text-xs font-bold flex items-center justify-center disabled:opacity-30"
-        >
-          -
-        </button>
-        <span className={`w-4 text-center text-xs font-bold ${value > 0 ? "text-gray-900" : "text-gray-400"}`}>
-          {value}
-        </span>
-        <button
-          onClick={() => onChange(value + 1)}
-          disabled={!canAdd}
-          className="w-5 h-5 rounded-full bg-gray-700 text-white text-xs font-bold flex items-center justify-center disabled:opacity-30"
-        >
-          +
-        </button>
-      </div>
+    <div className="flex items-center gap-0.5">
+      <span className="text-[10px] text-gray-500 w-3 font-bold">{label}</span>
+      <button
+        onClick={() => onChange(Math.max(0, value - 1))}
+        disabled={value <= 0}
+        className="w-5 h-5 rounded-full bg-gray-200 text-gray-700 text-xs font-bold flex items-center justify-center disabled:opacity-30"
+      >
+        -
+      </button>
+      <span className={`w-3 text-center text-xs font-bold ${value > 0 ? "text-gray-900" : "text-gray-400"}`}>
+        {value}
+      </span>
+      <button
+        onClick={() => onChange(value + 1)}
+        disabled={!canAdd}
+        className="w-5 h-5 rounded-full bg-gray-700 text-white text-xs font-bold flex items-center justify-center disabled:opacity-30"
+      >
+        +
+      </button>
     </div>
   );
 }
@@ -165,9 +163,9 @@ function MemberRow({
               {member.name}
             </td>
 
-            {/* セット A/B */}
+            {/* セット A/B（縦並び） */}
             <td className="text-center align-middle p-1" style={{ borderRight: cellBorder }}>
-              <div className="flex gap-1">
+              <div className="flex flex-col gap-1">
                 <SetCounter label="A" value={setA} canAdd={canAddSet} onChange={(v) => setQuantity(member.id, setAKey, v)} />
                 <SetCounter label="B" value={setB} canAdd={canAddSet} onChange={(v) => setQuantity(member.id, setBKey, v)} />
               </div>

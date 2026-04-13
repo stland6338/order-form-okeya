@@ -33,44 +33,44 @@ export function MemberSection({
 
       {/* セット */}
       <div className="px-3 py-2 border-b border-gray-100 bg-white">
-        <div className="flex items-center justify-between mb-2">
-          <div>
+        <div className="flex items-start justify-between">
+          <div className="pt-1">
             <span className="text-sm font-medium">{member.set.name}</span>
             <span className="text-xs text-gray-500 ml-2">
               ¥{member.set.price.toLocaleString()}
             </span>
+            {totalSets >= MAX_SETS_PER_ORDER && setA === 0 && setB === 0 && (
+              <p className="text-xs text-red-500 mt-1">※上限(2個)到達</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-1.5">
+            {member.set.variants.map((variant) => {
+              const key = `${member.set.id}-${variant}`;
+              const qty = getQuantity(member.id, key);
+              const canAdd = totalSets < MAX_SETS_PER_ORDER;
+              return (
+                <div key={variant} className="flex items-center gap-2">
+                  <span className="text-sm font-bold w-4">{variant}</span>
+                  <button
+                    onClick={() => setQuantity(member.id, key, Math.max(0, qty - 1))}
+                    disabled={qty <= 0}
+                    className="w-9 h-9 rounded-full bg-gray-300 text-gray-800 font-bold text-xl flex items-center justify-center disabled:opacity-25 active:bg-gray-400"
+                  >
+                    -
+                  </button>
+                  <span className={`w-6 text-center font-mono text-xl font-bold ${qty > 0 ? "text-gray-900" : "text-gray-400"}`}>{qty}</span>
+                  <button
+                    onClick={() => setQuantity(member.id, key, qty + 1)}
+                    disabled={!canAdd}
+                    className="w-9 h-9 rounded-full bg-gray-800 text-white font-bold text-xl flex items-center justify-center disabled:opacity-25 active:bg-gray-900"
+                  >
+                    +
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
-        <div className="flex gap-6">
-          {member.set.variants.map((variant) => {
-            const key = `${member.set.id}-${variant}`;
-            const qty = getQuantity(member.id, key);
-            const canAdd = totalSets < MAX_SETS_PER_ORDER;
-            return (
-              <div key={variant} className="flex items-center gap-2">
-                <span className="text-sm font-bold w-4">{variant}</span>
-                <button
-                  onClick={() => setQuantity(member.id, key, Math.max(0, qty - 1))}
-                  disabled={qty <= 0}
-                  className="w-9 h-9 rounded-full bg-gray-300 text-gray-800 font-bold text-xl flex items-center justify-center disabled:opacity-25 active:bg-gray-400"
-                >
-                  -
-                </button>
-                <span className={`w-6 text-center font-mono text-xl font-bold ${qty > 0 ? "text-gray-900" : "text-gray-400"}`}>{qty}</span>
-                <button
-                  onClick={() => setQuantity(member.id, key, qty + 1)}
-                  disabled={!canAdd}
-                  className="w-9 h-9 rounded-full bg-gray-800 text-white font-bold text-xl flex items-center justify-center disabled:opacity-25 active:bg-gray-900"
-                >
-                  +
-                </button>
-              </div>
-            );
-          })}
-        </div>
-        {totalSets >= MAX_SETS_PER_ORDER && setA === 0 && setB === 0 && (
-          <p className="text-xs text-red-500 mt-1">※セット上限(2個)に達しています</p>
-        )}
       </div>
 
       {/* 通常商品 */}
