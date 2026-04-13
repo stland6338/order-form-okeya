@@ -287,7 +287,7 @@ export function TableView({
 
       {/* 注意事項 */}
       <div className="text-[10px] text-gray-500 space-y-0.5 px-1">
-        <p className="text-red-600 font-bold">※セットはメンバー問わず1会計につき合計2個までです。</p>
+        <p className="text-red-600 font-bold">※セットは1会計につき合計2個までです。</p>
         <p>※★＝セットに入っているものです</p>
         <p>※待ち時間お時間ある方はぴったりの金額をご用意いただけると大変助かります！</p>
       </div>
