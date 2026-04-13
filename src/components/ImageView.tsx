@@ -8,25 +8,23 @@ interface ImageViewProps {
   totalSets: number;
 }
 
-const W = 4093;
-const H = 2894;
+// 画像サイズ: 4093 x 2894
+const IMG_W = 4093;
+const IMG_H = 2894;
+const IMG_RATIO = `${IMG_W} / ${IMG_H}`;
 
 function pct(x: number, y: number, w: number, h: number) {
   return {
-    left: `${(x / W) * 100}%`,
-    top: `${(y / H) * 100}%`,
-    width: `${(w / W) * 100}%`,
-    height: `${(h / H) * 100}%`,
+    left: `${(x / IMG_W) * 100}%`,
+    top: `${(y / IMG_H) * 100}%`,
+    width: `${(w / IMG_W) * 100}%`,
+    height: `${(h / IMG_H) * 100}%`,
   };
 }
 
-// ピクセル単位の正確なセル境界（strongHLine/strongVLineで測定済み）
-// 垂直線(x): 493, 544, 721, 772, 959, 1426, 1892, 2359, 2826, 2929, 3395, 3862
-
-// セットA/B: メンバー名右端〜次の列を均等2分割
-// 実機確認で上にかかっていたためY方向は下にオフセット
-const COL_SET_A = { x: 570, w: 190 };
-const COL_SET_B = { x: 770, w: 190 };
+// セットA/B
+const COL_SET_A = { x: 497, w: 228 };
+const COL_SET_B = { x: 729, w: 228 };
 
 const P = 4;
 const COL_PRODUCTS = [
@@ -38,22 +36,21 @@ const COL_PRODUCTS = [
   { x: 3395 + P, w: 3862 - 3395 - P * 2 },
 ];
 
-// 各メンバーの入力行（実機基準で調整）
+// 各メンバーの入力行
 const MEMBERS_ROW = [
-  { y: 890, h: 160 },  // りこ
-  { y: 1240, h: 160 }, // ナナ
-  { y: 1590, h: 160 }, // 綺沙良
-  { y: 1940, h: 160 }, // 桃音
-  { y: 2290, h: 160 }, // ルンルン
+  { y: 825, h: 176 },  // りこ
+  { y: 1177, h: 172 }, // ナナ
+  { y: 1524, h: 176 }, // 綺沙良
+  { y: 1876, h: 176 }, // 桃音
+  { y: 2230, h: 172 }, // ルンルン
 ];
 
-// 共通商品: フレークシール / アクリルパーツ
-// 入力セル行(y=2643)〜ボックス下端(y=2819)
-const COMMON_Y = 2660;
-const COMMON_H = 200;
+// 共通商品
+const COMMON_Y = 2645;
+const COMMON_H = 172;
 const COMMON_COLS = [
-  { x: 620, w: 370 },  // フレークシール（少し右に微調整）
-  { x: 1120, w: 370 }, // アクリルパーツ（少し右に微調整）
+  { x: 148, w: 343 },
+  { x: 497, w: 460 },
 ];
 
 function OverlayInput({
@@ -92,14 +89,15 @@ export function ImageView({
   const canAddSet = totalSets < MAX_SETS_PER_ORDER;
 
   return (
-    <div className="relative w-full select-none">
-      <img
-        src="/order-sheet.jpg"
-        alt="注文票"
-        className="w-full h-auto block"
-        draggable={false}
-      />
-
+    <div
+      className="relative w-full select-none"
+      style={{
+        aspectRatio: IMG_RATIO,
+        backgroundImage: "url(/order-sheet.jpg)",
+        backgroundSize: "100% 100%",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       {MEMBERS.map((member, mi) => {
         const { y, h } = MEMBERS_ROW[mi];
         const setAKey = `${member.set.id}-A`;
