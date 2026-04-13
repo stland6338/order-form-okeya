@@ -49,8 +49,8 @@ const MEMBERS_ROW = [
 const COMMON_Y = 2645;
 const COMMON_H = 172;
 const COMMON_COLS = [
-  { x: 500, w: 224 },   // フレークシール
-  { x: 1000, w: 300 },  // アクリルパーツ（実機基準で右にシフト）
+  { x: 500, w: 450 },   // フレークシール（セル枠いっぱいに）
+  { x: 1400, w: 450 },  // アクリルパーツ（実機基準でさらに右に）
 ];
 
 function OverlayInput({
