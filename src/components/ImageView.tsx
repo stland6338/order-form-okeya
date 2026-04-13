@@ -45,12 +45,12 @@ const MEMBERS_ROW = [
   { y: 2230, h: 172 }, // ルンルン
 ];
 
-// 共通商品
+// 共通商品（白いコンテンツエリア x=498〜955 を2等分）
 const COMMON_Y = 2645;
 const COMMON_H = 172;
 const COMMON_COLS = [
-  { x: 148, w: 343 },
-  { x: 497, w: 460 },
+  { x: 500, w: 224 },  // フレークシール (x=500〜724)
+  { x: 730, w: 224 },  // アクリルパーツ (x=730〜954)
 ];
 
 function OverlayInput({
