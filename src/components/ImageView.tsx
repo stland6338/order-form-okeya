@@ -36,12 +36,12 @@ const MEMBERS_ROW = [
   { y: 2230, h: 172 },
 ];
 
-// 共通商品
+// 共通商品（各セルが約450px幅で隣接）
 const COMMON_Y = 2645;
 const COMMON_H = 172;
 const COMMON_COLS = [
-  { x: 500, w: 220 },
-  { x: 730, w: 220 },
+  { x: 500, w: 450 },   // フレークシール (x=500〜950)
+  { x: 960, w: 450 },   // アクリルパーツ (x=960〜1410)
 ];
 
 function OverlayInput({
