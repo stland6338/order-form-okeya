@@ -11,7 +11,7 @@ interface ImageViewProps {
 // 画像サイズ: 4093 x 2894
 const IMG_W = 4093;
 const IMG_H = 2894;
-const IMG_RATIO = `${IMG_W} / ${IMG_H}`;
+// const IMG_RATIO = `${IMG_W} / ${IMG_H}`;
 
 function pct(x: number, y: number, w: number, h: number) {
   return {
@@ -89,15 +89,14 @@ export function ImageView({
   const canAddSet = totalSets < MAX_SETS_PER_ORDER;
 
   return (
-    <div
-      className="relative w-full select-none"
-      style={{
-        aspectRatio: IMG_RATIO,
-        backgroundImage: "url(/order-sheet.jpg)",
-        backgroundSize: "100% 100%",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
+    <div className="w-full select-none overflow-hidden">
+      <div className="relative inline-block w-full">
+        <img
+          src="/order-sheet.jpg"
+          alt="注文票"
+          className="block w-full h-auto"
+          draggable={false}
+        />
       {MEMBERS.map((member, mi) => {
         const { y, h } = MEMBERS_ROW[mi];
         const setAKey = `${member.set.id}-A`;
@@ -141,6 +140,7 @@ export function ImageView({
           style={pct(COMMON_COLS[i].x, COMMON_Y, COMMON_COLS[i].w, COMMON_H)}
         />
       ))}
+      </div>
     </div>
   );
 }
