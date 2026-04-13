@@ -18,8 +18,6 @@ export function MemberSection({
   const setA = getQuantity(member.id, `${member.set.id}-A`);
   const setB = getQuantity(member.id, `${member.set.id}-B`);
 
-  const canAddSet = totalSets < MAX_SETS_PER_ORDER;
-
   return (
     <div
       className="border-2 rounded-lg overflow-hidden"
@@ -35,7 +33,7 @@ export function MemberSection({
 
       {/* セット */}
       <div className="px-3 py-2 border-b border-gray-100 bg-white">
-        <div className="flex items-center justify-between mb-1">
+        <div className="flex items-center justify-between mb-2">
           <div>
             <span className="text-sm font-medium">{member.set.name}</span>
             <span className="text-xs text-gray-500 ml-2">
@@ -43,31 +41,36 @@ export function MemberSection({
             </span>
           </div>
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-6">
           {member.set.variants.map((variant) => {
             const key = `${member.set.id}-${variant}`;
-            const checked = getQuantity(member.id, key) > 0;
+            const qty = getQuantity(member.id, key);
+            const canAdd = totalSets < MAX_SETS_PER_ORDER || qty > 0;
             return (
-              <label key={variant} className="flex items-center gap-1.5 text-sm">
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  disabled={!checked && !canAddSet}
-                  onChange={(e) =>
-                    setQuantity(member.id, key, e.target.checked ? 1 : 0)
-                  }
-                  className="w-5 h-5 accent-gray-700"
-                />
-                <span className={checked ? "font-bold" : "text-gray-500"}>
-                  {variant}
-                </span>
-              </label>
+              <div key={variant} className="flex items-center gap-2">
+                <span className="text-sm font-medium w-4">{variant}</span>
+                <button
+                  onClick={() => setQuantity(member.id, key, Math.max(0, qty - 1))}
+                  disabled={qty <= 0}
+                  className="w-7 h-7 rounded-full bg-gray-200 text-gray-700 font-bold text-sm flex items-center justify-center disabled:opacity-30"
+                >
+                  -
+                </button>
+                <span className="w-5 text-center font-mono text-base font-bold">{qty}</span>
+                <button
+                  onClick={() => setQuantity(member.id, key, qty + 1)}
+                  disabled={!canAdd}
+                  className="w-7 h-7 rounded-full bg-gray-700 text-white font-bold text-sm flex items-center justify-center disabled:opacity-30"
+                >
+                  +
+                </button>
+              </div>
             );
           })}
-          {!canAddSet && setA === 0 && setB === 0 && (
-            <span className="text-xs text-red-500">※セット上限(2個)に達しています</span>
-          )}
         </div>
+        {totalSets >= MAX_SETS_PER_ORDER && setA === 0 && setB === 0 && (
+          <p className="text-xs text-red-500 mt-1">※セット上限(2個)に達しています</p>
+        )}
       </div>
 
       {/* 通常商品 */}

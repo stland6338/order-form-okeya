@@ -36,6 +36,43 @@ function QuantityInput({
 // 旧商品の左ボーダー用スタイル（太い線 + 小さなマージン風）
 const OLD_SEPARATOR = "3px solid #ccc";
 
+function SetCounter({
+  label,
+  value,
+  canAdd,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  canAdd: boolean;
+  onChange: (v: number) => void;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-0.5 flex-1">
+      <span className="text-[10px] text-gray-500">{label}</span>
+      <div className="flex items-center gap-0.5">
+        <button
+          onClick={() => onChange(Math.max(0, value - 1))}
+          disabled={value <= 0}
+          className="w-5 h-5 rounded-full bg-gray-200 text-gray-700 text-xs font-bold flex items-center justify-center disabled:opacity-30"
+        >
+          -
+        </button>
+        <span className={`w-4 text-center text-xs font-bold ${value > 0 ? "text-gray-900" : "text-gray-400"}`}>
+          {value}
+        </span>
+        <button
+          onClick={() => onChange(value + 1)}
+          disabled={!canAdd}
+          className="w-5 h-5 rounded-full bg-gray-700 text-white text-xs font-bold flex items-center justify-center disabled:opacity-30"
+        >
+          +
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function MemberRow({
   member,
   getQuantity,
@@ -67,7 +104,7 @@ function MemberRow({
       style={{ border: `2px solid ${border}` }}
     >
       <table className="w-full border-collapse text-[10px]" style={{ tableLayout: "fixed" }}>
-        <colgroup><col style={{ width: "8%" }} /><col style={{ width: "14%" }} /><col style={{ width: "13%" }} /><col style={{ width: "11%" }} /><col style={{ width: "10%" }} /><col style={{ width: "14%" }} /><col style={{ width: "15%" }} /><col style={{ width: "15%" }} /></colgroup>
+        <colgroup><col style={{ width: "6%" }} /><col style={{ width: "20%" }} /><col style={{ width: "12%" }} /><col style={{ width: "10%" }} /><col style={{ width: "9%" }} /><col style={{ width: "13%" }} /><col style={{ width: "15%" }} /><col style={{ width: "15%" }} /></colgroup>
 
         {/* 価格ヘッダー */}
         <thead>
@@ -130,22 +167,9 @@ function MemberRow({
 
             {/* セット A/B */}
             <td className="text-center align-middle p-1" style={{ borderRight: cellBorder }}>
-              <div className="text-[10px] text-gray-500 mb-0.5">A &nbsp; B</div>
-              <div className="flex gap-1.5 justify-center">
-                <input
-                  type="checkbox"
-                  checked={setA > 0}
-                  disabled={!setA && !canAddSet}
-                  onChange={(e) => setQuantity(member.id, setAKey, e.target.checked ? 1 : 0)}
-                  className="w-5 h-5 accent-gray-700"
-                />
-                <input
-                  type="checkbox"
-                  checked={setB > 0}
-                  disabled={!setB && !canAddSet}
-                  onChange={(e) => setQuantity(member.id, setBKey, e.target.checked ? 1 : 0)}
-                  className="w-5 h-5 accent-gray-700"
-                />
+              <div className="flex gap-1">
+                <SetCounter label="A" value={setA} canAdd={canAddSet || setA > 0} onChange={(v) => setQuantity(member.id, setAKey, v)} />
+                <SetCounter label="B" value={setB} canAdd={canAddSet || setB > 0} onChange={(v) => setQuantity(member.id, setBKey, v)} />
               </div>
             </td>
 
