@@ -52,8 +52,8 @@ const MEMBERS_ROW = [
 const COMMON_Y = 2645;
 const COMMON_H = 172;
 const COMMON_COLS = [
-  { x: 350, w: 290 },  // フレークシール（商品名テキスト直下に合わせる）
-  { x: 700, w: 290 },  // アクリルパーツ（商品名テキスト直下に合わせる）
+  { x: 530, w: 430 },  // フレークシール（商品名テキスト直下に合わせる）
+  { x: 1030, w: 430 }, // アクリルパーツ（商品名テキスト直下に合わせる）
 ];
 
 function OverlayInput({
