@@ -77,9 +77,9 @@ export function ImageView({
   setCommonQuantity,
   totalSets,
 }: ImageViewProps) {
-  // totalSets と MAX_SETS_PER_ORDER は clampSet 内で使用
   const imgRef = useRef<HTMLImageElement>(null);
   const [imgSize, setImgSize] = useState({ w: 0, h: 0 });
+  const [showLimitMsg, setShowLimitMsg] = useState(false);
 
   const updateSize = useCallback(() => {
     if (imgRef.current) {
@@ -109,7 +109,12 @@ export function ImageView({
   }
 
   return (
-    <div className="w-full select-none overflow-hidden">
+    <div className="w-full select-none overflow-hidden relative">
+      {showLimitMsg && (
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-50 bg-red-600 text-white text-sm font-bold px-4 py-2 rounded-lg shadow-lg animate-bounce">
+          セットは1回のお会計で2個までです
+        </div>
+      )}
       <div className="relative inline-block w-full">
         <img
           ref={imgRef}
@@ -130,9 +135,14 @@ export function ImageView({
               const clampSet = (key: string, v: number) => {
                 const current = getQuantity(member.id, key);
                 const increase = v - current;
-                if (increase <= 0) return v; // 減少は常にOK
+                if (increase <= 0) return v;
                 const remaining = MAX_SETS_PER_ORDER - totalSets;
-                return current + Math.min(increase, remaining);
+                const clamped = current + Math.min(increase, remaining);
+                if (clamped < v) {
+                  setShowLimitMsg(true);
+                  setTimeout(() => setShowLimitMsg(false), 3000);
+                }
+                return clamped;
               };
 
               return (
