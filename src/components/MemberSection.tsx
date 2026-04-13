@@ -45,7 +45,7 @@ export function MemberSection({
           {member.set.variants.map((variant) => {
             const key = `${member.set.id}-${variant}`;
             const qty = getQuantity(member.id, key);
-            const canAdd = totalSets < MAX_SETS_PER_ORDER || qty > 0;
+            const canAdd = totalSets < MAX_SETS_PER_ORDER;
             return (
               <div key={variant} className="flex items-center gap-2">
                 <span className="text-sm font-medium w-4">{variant}</span>

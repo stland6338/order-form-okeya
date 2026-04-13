@@ -168,8 +168,8 @@ function MemberRow({
             {/* セット A/B */}
             <td className="text-center align-middle p-1" style={{ borderRight: cellBorder }}>
               <div className="flex gap-1">
-                <SetCounter label="A" value={setA} canAdd={canAddSet || setA > 0} onChange={(v) => setQuantity(member.id, setAKey, v)} />
-                <SetCounter label="B" value={setB} canAdd={canAddSet || setB > 0} onChange={(v) => setQuantity(member.id, setBKey, v)} />
+                <SetCounter label="A" value={setA} canAdd={canAddSet} onChange={(v) => setQuantity(member.id, setAKey, v)} />
+                <SetCounter label="B" value={setB} canAdd={canAddSet} onChange={(v) => setQuantity(member.id, setBKey, v)} />
               </div>
             </td>
 
