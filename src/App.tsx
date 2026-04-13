@@ -7,11 +7,18 @@ import { MemberSection } from "./components/MemberSection";
 import { CommonSection } from "./components/CommonSection";
 import { OrderSummary } from "./components/OrderSummary";
 import { TableView } from "./components/TableView";
+import { ImageView } from "./components/ImageView";
 
-type ViewMode = "list" | "table";
+type ViewMode = "image" | "table" | "list";
+
+const TABS: { mode: ViewMode; label: string }[] = [
+  { mode: "image", label: "原紙" },
+  { mode: "table", label: "注文票" },
+  { mode: "list", label: "リスト" },
+];
 
 function App() {
-  const [viewMode, setViewMode] = useState<ViewMode>("table");
+  const [viewMode, setViewMode] = useState<ViewMode>("image");
 
   const {
     order,
@@ -40,7 +47,6 @@ function App() {
     let itemCount = 0;
 
     for (const member of MEMBERS) {
-      // セット
       for (const variant of member.set.variants) {
         const key = `${member.set.id}-${variant}`;
         const qty = order.members[member.id]?.[key] ?? 0;
@@ -49,7 +55,6 @@ function App() {
           itemCount += qty;
         }
       }
-      // 通常商品
       for (const product of member.products) {
         const qty = order.members[member.id]?.[product.id] ?? 0;
         if (qty > 0) {
@@ -59,7 +64,6 @@ function App() {
       }
     }
 
-    // 共通商品
     for (const product of COMMON_PRODUCTS) {
       const qty = order.common[product.id] ?? 0;
       if (qty > 0) {
@@ -77,31 +81,32 @@ function App() {
 
       {/* ビュー切り替えタブ */}
       <div className="flex border-b border-gray-200 bg-white">
-        <button
-          onClick={() => setViewMode("table")}
-          className={`flex-1 py-2 text-sm font-medium text-center border-b-2 transition-colors ${
-            viewMode === "table"
-              ? "border-gray-800 text-gray-900"
-              : "border-transparent text-gray-400"
-          }`}
-        >
-          注文票
-        </button>
-        <button
-          onClick={() => setViewMode("list")}
-          className={`flex-1 py-2 text-sm font-medium text-center border-b-2 transition-colors ${
-            viewMode === "list"
-              ? "border-gray-800 text-gray-900"
-              : "border-transparent text-gray-400"
-          }`}
-        >
-          リスト
-        </button>
+        {TABS.map((tab) => (
+          <button
+            key={tab.mode}
+            onClick={() => setViewMode(tab.mode)}
+            className={`flex-1 py-2 text-sm font-medium text-center border-b-2 transition-colors ${
+              viewMode === tab.mode
+                ? "border-gray-800 text-gray-900"
+                : "border-transparent text-gray-400"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
-      <NotesSection />
+      {viewMode !== "image" && <NotesSection />}
 
-      {viewMode === "table" ? (
+      {viewMode === "image" ? (
+        <ImageView
+          getQuantity={getQuantity}
+          setQuantity={setQuantity}
+          getCommonQuantity={getCommonQuantity}
+          setCommonQuantity={setCommonQuantity}
+          totalSets={totalSets}
+        />
+      ) : viewMode === "table" ? (
         <TableView
           getQuantity={getQuantity}
           setQuantity={setQuantity}
