@@ -11,7 +11,7 @@ interface ImageViewProps {
 
 // 画像の自然サイズ
 const IMG_W = 4093;
-// IMG_H = 2894 (参考値)
+// IMG_H = 2590 (sheet2.jpg)
 
 // セットA/B
 const COL_SET_A = { x: 497, w: 228 };
@@ -29,19 +29,19 @@ const COL_PRODUCTS = [
 
 // メンバー入力行
 const MEMBERS_ROW = [
-  { y: 825, h: 176 },
-  { y: 1177, h: 172 },
-  { y: 1524, h: 176 },
-  { y: 1876, h: 176 },
-  { y: 2230, h: 172 },
+  { y: 521, h: 176 },  // りこ  519→699
+  { y: 873, h: 172 },  // ナナ  871→1047
+  { y: 1220, h: 176 }, // 綺沙良 1218→1398
+  { y: 1572, h: 176 }, // 桃音  1570→1750
+  { y: 1926, h: 172 }, // ルンルン 1924→2100
 ];
 
 // 共通商品（各セルが約450px幅で隣接）
-const COMMON_Y = 2645;
-const COMMON_H = 172;
+const COMMON_Y = 2339;
+const COMMON_H = 176;
 const COMMON_COLS = [
-  { x: 500, w: 450 },   // フレークシール (x=500〜950)
-  { x: 960, w: 450 },   // アクリルパーツ (x=960〜1410)
+  { x: 500, w: 450 },   // フレークシール
+  { x: 960, w: 450 },   // アクリルパーツ
 ];
 
 function OverlayInput({
@@ -118,7 +118,7 @@ export function ImageView({
       <div className="relative inline-block w-full">
         <img
           ref={imgRef}
-          src="/order-sheet.jpg"
+          src="/sheet2.jpg"
           alt="注文票"
           className="block w-full h-auto"
           draggable={false}
