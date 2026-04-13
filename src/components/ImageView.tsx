@@ -44,8 +44,8 @@ function pct(x: number, y: number, w: number, h: number) {
 
 const PADDING = 8;
 
-const COL_SET_A = { x: 260 + PADDING, w: (959 - 260) / 2 - PADDING * 2 };
-const COL_SET_B = { x: 260 + (959 - 260) / 2 + PADDING, w: (959 - 260) / 2 - PADDING * 2 };
+// セット全体（A+B を1セルにまとめる）
+const COL_SET = { x: 260 + PADDING, w: 959 - 260 - PADDING * 2 };
 const COL_PRODUCTS = [
   { x: 959 + PADDING, w: 1426 - 959 - PADDING * 2 },   // アクスタ
   { x: 1426 + PADDING, w: 1892 - 1426 - PADDING * 2 },  // アクキー
@@ -98,35 +98,54 @@ function OverlayInput({
   );
 }
 
-function SetOverlay({
-  value,
+function SetPairOverlay({
+  valueA,
+  valueB,
   canAdd,
-  onChange,
+  onChangeA,
+  onChangeB,
   style,
 }: {
-  value: number;
+  valueA: number;
+  valueB: number;
   canAdd: boolean;
-  onChange: (v: number) => void;
+  onChangeA: (v: number) => void;
+  onChangeB: (v: number) => void;
   style: React.CSSProperties;
 }) {
+  const inputClass = (v: number) =>
+    `flex-1 text-center font-bold rounded border ${
+      v > 0
+        ? "bg-yellow-200/80 border-yellow-500 text-gray-900"
+        : "bg-white/50 border-gray-300/40 text-gray-500"
+    }`;
+  const fs = { fontSize: "clamp(10px, 2vw, 18px)" };
+
   return (
-    <input
-      type="number"
-      inputMode="numeric"
-      min={0}
-      max={canAdd ? 99 : value}
-      value={value || ""}
-      onChange={(e) => {
-        const v = parseInt(e.target.value) || 0;
-        onChange(Math.max(0, v));
-      }}
-      className={`absolute text-center font-bold rounded ${
-        value > 0
-          ? "bg-yellow-200/80 border-2 border-yellow-500 text-gray-900"
-          : "bg-white/50 border border-gray-300/40 text-gray-500"
-      }`}
-      style={{ ...style, fontSize: "clamp(10px, 2vw, 20px)" }}
-    />
+    <div className="absolute flex flex-col gap-[4%] p-[2%]" style={style}>
+      <div className="flex items-center gap-[4%] flex-1">
+        <span className="font-bold text-gray-600 shrink-0" style={{ fontSize: "clamp(8px, 1.5vw, 13px)" }}>A</span>
+        <input
+          type="number" inputMode="numeric" min={0}
+          max={canAdd ? 99 : valueA}
+          value={valueA || ""}
+          onChange={(e) => onChangeA(Math.max(0, parseInt(e.target.value) || 0))}
+          className={inputClass(valueA)}
+          style={fs}
+        />
+      </div>
+      <div className="flex items-center gap-[4%] flex-1">
+        <span className="font-bold text-gray-600 shrink-0" style={{ fontSize: "clamp(8px, 1.5vw, 13px)" }}>B</span>
+        <input
+          type="number" inputMode="numeric" min={0}
+          max={canAdd ? 99 : valueB}
+          value={valueB || ""}
+          onChange={(e) => onChangeB(Math.max(0, parseInt(e.target.value) || 0))}
+          className={inputClass(valueB)}
+          style={fs}
+        />
+      </div>
+    </div>
   );
 }
 
@@ -155,17 +174,13 @@ export function ImageView({
 
         return (
           <div key={member.id}>
-            <SetOverlay
-              value={getQuantity(member.id, setAKey)}
+            <SetPairOverlay
+              valueA={getQuantity(member.id, setAKey)}
+              valueB={getQuantity(member.id, setBKey)}
               canAdd={canAddSet}
-              onChange={(v) => setQuantity(member.id, setAKey, v)}
-              style={pct(COL_SET_A.x, y, COL_SET_A.w, h)}
-            />
-            <SetOverlay
-              value={getQuantity(member.id, setBKey)}
-              canAdd={canAddSet}
-              onChange={(v) => setQuantity(member.id, setBKey, v)}
-              style={pct(COL_SET_B.x, y, COL_SET_B.w, h)}
+              onChangeA={(v) => setQuantity(member.id, setAKey, v)}
+              onChangeB={(v) => setQuantity(member.id, setBKey, v)}
+              style={pct(COL_SET.x, y, COL_SET.w, h)}
             />
             {member.products.map((p, pi) => (
               <OverlayInput
