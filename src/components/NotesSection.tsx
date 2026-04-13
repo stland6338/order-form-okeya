@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export function NotesSection() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   return (
     <div className="mx-4 my-3">
@@ -20,7 +20,7 @@ export function NotesSection() {
           <li>記入が終わったら記入した紙をお持ちいただき、バインダーを後ろの方に回してください。</li>
           <li>桶沢のXを見て既にご対応いただいている方は記入不要です。そのままバインダーを後ろへ回し、注文時は画面を見せてください。</li>
           <li>時間がかかりそうな方はQRコード読み込み後スマホでご対応ください。</li>
-          <li>セットは一回のお会計で2個までとさせていただきます。</li>
+          <li className="text-red-600 font-bold">セットは一回のお会計で2個までとさせていただきます。</li>
           <li>★＝セットに入っているものです。</li>
           <li>待ち時間お時間ある方はぴったりの金額をご用意いただけると大変助かります！</li>
           <li>混乱回避のためこちらの紙は会計後お返しさせていただきます。</li>

@@ -24,20 +24,20 @@ export function ProductRow({ name, price, inSet, quantity, onChange }: ProductRo
         </div>
         <span className="text-xs text-gray-500">¥{price.toLocaleString()}</span>
       </div>
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2">
         <button
           onClick={() => onChange(quantity - 1)}
           disabled={quantity <= 0}
-          className="w-8 h-8 rounded-full bg-gray-200 text-gray-700 font-bold text-lg flex items-center justify-center disabled:opacity-30"
+          className="w-9 h-9 rounded-full bg-gray-300 text-gray-800 font-bold text-xl flex items-center justify-center disabled:opacity-25 active:bg-gray-400"
         >
           -
         </button>
-        <span className="w-8 text-center font-mono text-lg font-bold">
+        <span className={`w-8 text-center font-mono text-xl font-bold ${active ? "text-gray-900" : "text-gray-400"}`}>
           {quantity}
         </span>
         <button
           onClick={() => onChange(quantity + 1)}
-          className="w-8 h-8 rounded-full bg-gray-700 text-white font-bold text-lg flex items-center justify-center"
+          className="w-9 h-9 rounded-full bg-gray-800 text-white font-bold text-xl flex items-center justify-center active:bg-gray-900"
         >
           +
         </button>

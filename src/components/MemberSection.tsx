@@ -48,19 +48,19 @@ export function MemberSection({
             const canAdd = totalSets < MAX_SETS_PER_ORDER;
             return (
               <div key={variant} className="flex items-center gap-2">
-                <span className="text-sm font-medium w-4">{variant}</span>
+                <span className="text-sm font-bold w-4">{variant}</span>
                 <button
                   onClick={() => setQuantity(member.id, key, Math.max(0, qty - 1))}
                   disabled={qty <= 0}
-                  className="w-7 h-7 rounded-full bg-gray-200 text-gray-700 font-bold text-sm flex items-center justify-center disabled:opacity-30"
+                  className="w-9 h-9 rounded-full bg-gray-300 text-gray-800 font-bold text-xl flex items-center justify-center disabled:opacity-25 active:bg-gray-400"
                 >
                   -
                 </button>
-                <span className="w-5 text-center font-mono text-base font-bold">{qty}</span>
+                <span className={`w-6 text-center font-mono text-xl font-bold ${qty > 0 ? "text-gray-900" : "text-gray-400"}`}>{qty}</span>
                 <button
                   onClick={() => setQuantity(member.id, key, qty + 1)}
                   disabled={!canAdd}
-                  className="w-7 h-7 rounded-full bg-gray-700 text-white font-bold text-sm flex items-center justify-center disabled:opacity-30"
+                  className="w-9 h-9 rounded-full bg-gray-800 text-white font-bold text-xl flex items-center justify-center disabled:opacity-25 active:bg-gray-900"
                 >
                   +
                 </button>
