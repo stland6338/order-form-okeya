@@ -79,7 +79,7 @@ export function MemberSection({
       })}
       {totalSets >= MAX_SETS_PER_ORDER && setA === 0 && setB === 0 && (
         <div className="px-3 py-1 bg-red-50 border-b border-gray-100">
-          <p className="text-xs text-red-500 font-bold">※セットは1回のお会計で2個までです</p>
+          <p className="text-xs text-red-500 font-bold">※セットはメンバー問わず1会計につき合計2個までです</p>
         </div>
       )}
 

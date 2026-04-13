@@ -112,7 +112,7 @@ export function ImageView({
     <div className="w-full select-none overflow-hidden relative">
       {showLimitMsg && (
         <div className="absolute top-2 left-1/2 -translate-x-1/2 z-50 bg-red-600 text-white text-sm font-bold px-4 py-2 rounded-lg shadow-lg animate-bounce">
-          セットは1回のお会計で2個までです
+          セットはメンバー問わず1会計につき合計2個までです
         </div>
       )}
       <div className="relative inline-block w-full">

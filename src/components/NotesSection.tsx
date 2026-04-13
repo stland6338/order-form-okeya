@@ -17,7 +17,7 @@ export function NotesSection() {
       {open && (
         <ul className="mt-2 text-xs text-gray-600 space-y-1 pl-4 list-disc">
           <li>ご購入希望のものに個数を記入してください。</li>
-          <li className="text-red-600 font-bold">セットは一回のお会計で2個までとさせていただきます。</li>
+          <li className="text-red-600 font-bold">セットはメンバー問わず1会計につき合計2個までとさせていただきます。</li>
           <li>★＝セットに入っているものです。</li>
           <li>待ち時間お時間ある方はぴったりの金額をご用意いただけると大変助かります！</li>
         </ul>
