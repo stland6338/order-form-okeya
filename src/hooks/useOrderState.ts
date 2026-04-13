@@ -104,6 +104,54 @@ export function useOrderState() {
     [order],
   );
 
+  // delta(+1/-1)で増減。prevから最新値を読むのでクロージャの古い値問題なし
+  const adjustQuantity = useCallback(
+    (memberId: string, productId: string, delta: number) => {
+      setOrder((prev) => {
+        const current = prev.members[memberId]?.[productId] ?? 0;
+        let qty = Math.max(0, current + delta);
+
+        if (isSetKey(productId) && delta > 0) {
+          const currentTotal = countTotalSets(prev);
+          const remaining = MAX_SETS_PER_ORDER - currentTotal;
+          qty = current + Math.min(delta, Math.max(0, remaining));
+        }
+
+        const next: OrderState = {
+          ...prev,
+          members: {
+            ...prev.members,
+            [memberId]: {
+              ...prev.members[memberId],
+              [productId]: qty,
+            },
+          },
+        };
+        saveOrder(next);
+        return next;
+      });
+    },
+    [],
+  );
+
+  const adjustCommonQuantity = useCallback(
+    (productId: string, delta: number) => {
+      setOrder((prev) => {
+        const current = prev.common[productId] ?? 0;
+        const next: OrderState = {
+          ...prev,
+          common: {
+            ...prev.common,
+            [productId]: Math.max(0, current + delta),
+          },
+        };
+        saveOrder(next);
+        return next;
+      });
+    },
+    [],
+  );
+
   const resetOrder = useCallback(() => {
     const empty: OrderState = { members: {}, common: {} };
     saveOrder(empty);
@@ -114,6 +162,8 @@ export function useOrderState() {
     order,
     setQuantity,
     setCommonQuantity,
+    adjustQuantity,
+    adjustCommonQuantity,
     getQuantity,
     getCommonQuantity,
     resetOrder,

@@ -6,6 +6,7 @@ interface MemberSectionProps {
   member: Member;
   getQuantity: (memberId: string, productId: string) => number;
   setQuantity: (memberId: string, productId: string, quantity: number) => void;
+  adjustQuantity: (memberId: string, productId: string, delta: number) => void;
   totalSets: number;
 }
 
@@ -13,6 +14,7 @@ export function MemberSection({
   member,
   getQuantity,
   setQuantity,
+  adjustQuantity,
   totalSets,
 }: MemberSectionProps) {
   const setA = getQuantity(member.id, `${member.set.id}-A`);
@@ -56,7 +58,7 @@ export function MemberSection({
             <div className="flex items-center gap-2">
               <span className="text-sm font-bold w-4">{variant}</span>
               <button
-                onClick={() => setQuantity(member.id, key, Math.max(0, qty - 1))}
+                onClick={() => adjustQuantity(member.id, key, -1)}
                 disabled={qty <= 0}
                 className="w-9 h-9 rounded-full bg-gray-300 text-gray-800 font-bold text-xl flex items-center justify-center disabled:opacity-25 active:bg-gray-400"
               >
@@ -64,7 +66,7 @@ export function MemberSection({
               </button>
               <span className={`w-8 text-center font-mono text-xl font-bold ${qty > 0 ? "text-gray-900" : "text-gray-400"}`}>{qty}</span>
               <button
-                onClick={() => setQuantity(member.id, key, qty + 1)}
+                onClick={() => adjustQuantity(member.id, key, +1)}
                 disabled={!canAdd}
                 className="w-9 h-9 rounded-full bg-gray-800 text-white font-bold text-xl flex items-center justify-center disabled:opacity-25 active:bg-gray-900"
               >

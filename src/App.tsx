@@ -22,6 +22,7 @@ function App() {
     order,
     setQuantity,
     setCommonQuantity,
+    adjustQuantity,
     getQuantity,
     getCommonQuantity,
     resetOrder,
@@ -110,6 +111,7 @@ function App() {
                 member={member}
                 getQuantity={getQuantity}
                 setQuantity={setQuantity}
+                adjustQuantity={adjustQuantity}
                 totalSets={totalSets}
               />
             ))}
