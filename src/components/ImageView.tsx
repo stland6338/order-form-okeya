@@ -1,3 +1,4 @@
+import { useRef, useState, useEffect, useCallback } from "react";
 import { MEMBERS, COMMON_PRODUCTS, MAX_SETS_PER_ORDER } from "../data";
 
 interface ImageViewProps {
@@ -8,19 +9,9 @@ interface ImageViewProps {
   totalSets: number;
 }
 
-// 画像サイズ: 4093 x 2894
+// 画像の自然サイズ
 const IMG_W = 4093;
-const IMG_H = 2894;
-// const IMG_RATIO = `${IMG_W} / ${IMG_H}`;
-
-function pct(x: number, y: number, w: number, h: number) {
-  return {
-    left: `${(x / IMG_W) * 100}%`,
-    top: `${(y / IMG_H) * 100}%`,
-    width: `${(w / IMG_W) * 100}%`,
-    height: `${(h / IMG_H) * 100}%`,
-  };
-}
+// IMG_H = 2894 (参考値)
 
 // セットA/B
 const COL_SET_A = { x: 497, w: 228 };
@@ -36,21 +27,21 @@ const COL_PRODUCTS = [
   { x: 3395 + P, w: 3862 - 3395 - P * 2 },
 ];
 
-// 各メンバーの入力行
+// メンバー入力行
 const MEMBERS_ROW = [
-  { y: 825, h: 176 },  // りこ
-  { y: 1177, h: 172 }, // ナナ
-  { y: 1524, h: 176 }, // 綺沙良
-  { y: 1876, h: 176 }, // 桃音
-  { y: 2230, h: 172 }, // ルンルン
+  { y: 825, h: 176 },
+  { y: 1177, h: 172 },
+  { y: 1524, h: 176 },
+  { y: 1876, h: 176 },
+  { y: 2230, h: 172 },
 ];
 
 // 共通商品
 const COMMON_Y = 2645;
 const COMMON_H = 172;
 const COMMON_COLS = [
-  { x: 500, w: 220 },   // フレークシール (x=500〜720)
-  { x: 730, w: 220 },   // アクリルパーツ (x=730〜950)
+  { x: 500, w: 220 },
+  { x: 730, w: 220 },
 ];
 
 function OverlayInput({
@@ -87,59 +78,95 @@ export function ImageView({
   totalSets,
 }: ImageViewProps) {
   const canAddSet = totalSets < MAX_SETS_PER_ORDER;
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [imgSize, setImgSize] = useState({ w: 0, h: 0 });
+
+  const updateSize = useCallback(() => {
+    if (imgRef.current) {
+      setImgSize({
+        w: imgRef.current.clientWidth,
+        h: imgRef.current.clientHeight,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, [updateSize]);
+
+  // px単位で座標を計算（%ではなく実ピクセル）
+  function pos(x: number, y: number, w: number, h: number): React.CSSProperties {
+    if (imgSize.w === 0) return { display: "none" };
+    const scale = imgSize.w / IMG_W;
+    return {
+      left: `${x * scale}px`,
+      top: `${y * scale}px`,
+      width: `${w * scale}px`,
+      height: `${h * scale}px`,
+    };
+  }
 
   return (
     <div className="w-full select-none overflow-hidden">
       <div className="relative inline-block w-full">
         <img
+          ref={imgRef}
           src="/order-sheet.jpg"
           alt="注文票"
           className="block w-full h-auto"
           draggable={false}
+          onLoad={updateSize}
         />
-      {MEMBERS.map((member, mi) => {
-        const { y, h } = MEMBERS_ROW[mi];
-        const setAKey = `${member.set.id}-A`;
-        const setBKey = `${member.set.id}-B`;
 
-        return (
-          <div key={member.id}>
-            <OverlayInput
-              value={getQuantity(member.id, setAKey)}
-              onChange={(v) => {
-                if (!canAddSet && v > getQuantity(member.id, setAKey)) return;
-                setQuantity(member.id, setAKey, v);
-              }}
-              style={pct(COL_SET_A.x, y, COL_SET_A.w, h)}
-            />
-            <OverlayInput
-              value={getQuantity(member.id, setBKey)}
-              onChange={(v) => {
-                if (!canAddSet && v > getQuantity(member.id, setBKey)) return;
-                setQuantity(member.id, setBKey, v);
-              }}
-              style={pct(COL_SET_B.x, y, COL_SET_B.w, h)}
-            />
-            {member.products.map((p, pi) => (
+        {imgSize.w > 0 && (
+          <>
+            {MEMBERS.map((member, mi) => {
+              const { y, h } = MEMBERS_ROW[mi];
+              const setAKey = `${member.set.id}-A`;
+              const setBKey = `${member.set.id}-B`;
+
+              return (
+                <div key={member.id}>
+                  <OverlayInput
+                    value={getQuantity(member.id, setAKey)}
+                    onChange={(v) => {
+                      if (!canAddSet && v > getQuantity(member.id, setAKey)) return;
+                      setQuantity(member.id, setAKey, v);
+                    }}
+                    style={pos(COL_SET_A.x, y, COL_SET_A.w, h)}
+                  />
+                  <OverlayInput
+                    value={getQuantity(member.id, setBKey)}
+                    onChange={(v) => {
+                      if (!canAddSet && v > getQuantity(member.id, setBKey)) return;
+                      setQuantity(member.id, setBKey, v);
+                    }}
+                    style={pos(COL_SET_B.x, y, COL_SET_B.w, h)}
+                  />
+                  {member.products.map((p, pi) => (
+                    <OverlayInput
+                      key={p.id}
+                      value={getQuantity(member.id, p.id)}
+                      onChange={(v) => setQuantity(member.id, p.id, v)}
+                      style={pos(COL_PRODUCTS[pi].x, y, COL_PRODUCTS[pi].w, h)}
+                    />
+                  ))}
+                </div>
+              );
+            })}
+
+            {COMMON_PRODUCTS.map((product, i) => (
               <OverlayInput
-                key={p.id}
-                value={getQuantity(member.id, p.id)}
-                onChange={(v) => setQuantity(member.id, p.id, v)}
-                style={pct(COL_PRODUCTS[pi].x, y, COL_PRODUCTS[pi].w, h)}
+                key={product.id}
+                value={getCommonQuantity(product.id)}
+                onChange={(v) => setCommonQuantity(product.id, v)}
+                style={pos(COMMON_COLS[i].x, COMMON_Y, COMMON_COLS[i].w, COMMON_H)}
               />
             ))}
-          </div>
-        );
-      })}
-
-      {COMMON_PRODUCTS.map((product, i) => (
-        <OverlayInput
-          key={product.id}
-          value={getCommonQuantity(product.id)}
-          onChange={(v) => setCommonQuantity(product.id, v)}
-          style={pct(COMMON_COLS[i].x, COMMON_Y, COMMON_COLS[i].w, COMMON_H)}
-        />
-      ))}
+          </>
+        )}
       </div>
     </div>
   );
