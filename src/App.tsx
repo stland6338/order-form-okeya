@@ -85,9 +85,10 @@ function App() {
             onClick={() => setViewMode(tab.mode)}
             className={`flex-1 py-2 text-sm font-medium text-center border-b-2 transition-colors ${
               viewMode === tab.mode
-                ? "border-gray-800 text-gray-900"
+                ? "text-gray-900"
                 : "border-transparent text-gray-400"
             }`}
+            style={viewMode === tab.mode ? { borderColor: "#F5509F" } : undefined}
           >
             {tab.label}
           </button>
