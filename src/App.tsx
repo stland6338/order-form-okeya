@@ -20,8 +20,6 @@ function App() {
     order,
     setQuantity,
     setCommonQuantity,
-    adjustQuantity,
-    adjustCommonQuantity,
     getQuantity,
     getCommonQuantity,
     resetOrder,
@@ -104,9 +102,6 @@ function App() {
         <MenuView
           getQuantity={getQuantity}
           getCommonQuantity={getCommonQuantity}
-          adjustQuantity={adjustQuantity}
-          adjustCommonQuantity={adjustCommonQuantity}
-          totalSets={totalSets}
         />
       )}
 
