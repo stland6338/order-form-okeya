@@ -140,7 +140,7 @@ export function ImageView({
               const handleSetChange = (key: string, v: number) => {
                 const current = getQuantity(member.id, key);
                 if (v > current && totalSets >= MAX_SETS_PER_ORDER) {
-                  showLimit("セットは1会計につき合計2個までです");
+                  showLimit("セットは1会計2点までです");
                 }
                 setQuantity(member.id, key, v);
               };
@@ -148,7 +148,7 @@ export function ImageView({
               const handleProductChange = (productId: string, v: number) => {
                 const current = getQuantity(member.id, productId);
                 if (v > current && v > MAX_PER_PRODUCT) {
-                  showLimit(`各商品は${MAX_PER_PRODUCT}個までです`);
+                  showLimit("1種類につき3点までです");
                 }
                 setQuantity(member.id, productId, v);
               };
@@ -184,7 +184,7 @@ export function ImageView({
                 onChange={(v) => {
                   const current = getCommonQuantity(product.id);
                   if (v > current && v > MAX_PER_PRODUCT) {
-                    showLimit(`各商品は${MAX_PER_PRODUCT}個までです`);
+                    showLimit("1種類につき3点までです");
                   }
                   setCommonQuantity(product.id, v);
                 }}
