@@ -83,7 +83,7 @@ function pct(c: CellCoord, imgW: number, imgH: number): React.CSSProperties {
 function QuantityBadge({ value }: { value: number }) {
   if (value <= 0) return null;
   return (
-    <div className="absolute inset-0 pointer-events-none">
+    <div className="absolute inset-0 pointer-events-none bg-yellow-300/30 rounded">
       <div
         className="absolute top-1 left-1 bg-yellow-400 text-gray-900 font-bold rounded-full flex items-center justify-center shadow-lg border-2 border-gray-900"
         style={{
