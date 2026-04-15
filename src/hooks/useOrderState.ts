@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import type { OrderState } from "../types";
-import { STORAGE_KEY, MEMBERS, MAX_SETS_PER_ORDER, MAX_QUANTITY } from "../data";
+import { STORAGE_KEY, MEMBERS, MAX_SETS_PER_ORDER, MAX_PER_PRODUCT, MAX_QUANTITY } from "../data";
 
 function isValidOrderState(v: unknown): v is OrderState {
   if (typeof v !== "object" || v === null) return false;
@@ -55,8 +55,8 @@ export function useOrderState() {
       setOrder((prev) => {
         let qty = Math.min(MAX_QUANTITY, Math.max(0, quantity));
 
-        // セットの場合: 最新のprevから合計を計算してクランプ
         if (isSetKey(productId)) {
+          // セットの場合: 合計2個上限
           const currentQty = prev.members[memberId]?.[productId] ?? 0;
           const currentTotal = countTotalSets(prev);
           const increase = qty - currentQty;
@@ -64,6 +64,9 @@ export function useOrderState() {
             const remaining = MAX_SETS_PER_ORDER - currentTotal;
             qty = currentQty + Math.min(increase, Math.max(0, remaining));
           }
+        } else {
+          // 通常商品: 個別3個上限
+          qty = Math.min(MAX_PER_PRODUCT, qty);
         }
 
         const next: OrderState = {
@@ -86,11 +89,12 @@ export function useOrderState() {
   const setCommonQuantity = useCallback(
     (productId: string, quantity: number) => {
       setOrder((prev) => {
+        const qty = Math.min(MAX_PER_PRODUCT, Math.max(0, quantity));
         const next: OrderState = {
           ...prev,
           common: {
             ...prev.common,
-            [productId]: Math.min(MAX_QUANTITY, Math.max(0, quantity)),
+            [productId]: qty,
           },
         };
         saveOrder(next);
@@ -125,6 +129,8 @@ export function useOrderState() {
           const currentTotal = countTotalSets(prev);
           const remaining = MAX_SETS_PER_ORDER - currentTotal;
           qty = current + Math.min(delta, Math.max(0, remaining));
+        } else if (!isSetKey(productId)) {
+          qty = Math.min(MAX_PER_PRODUCT, qty);
         }
 
         const next: OrderState = {
@@ -148,11 +154,12 @@ export function useOrderState() {
     (productId: string, delta: number) => {
       setOrder((prev) => {
         const current = prev.common[productId] ?? 0;
+        const qty = Math.min(MAX_PER_PRODUCT, Math.max(0, current + delta));
         const next: OrderState = {
           ...prev,
           common: {
             ...prev.common,
-            [productId]: Math.min(MAX_QUANTITY, Math.max(0, current + delta)),
+            [productId]: qty,
           },
         };
         saveOrder(next);

@@ -62,6 +62,7 @@ export const COMMON_PRODUCTS: CommonProduct[] = [
 ];
 
 export const MAX_SETS_PER_ORDER = 2;
+export const MAX_PER_PRODUCT = 3; // セット以外の各商品の個数上限
 export const MAX_QUANTITY = 99;
 
 export const STORAGE_KEY = "okeya-order";

@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from "react";
-import { MEMBERS, COMMON_PRODUCTS, MAX_SETS_PER_ORDER } from "../data";
+import { MEMBERS, COMMON_PRODUCTS, MAX_SETS_PER_ORDER, MAX_PER_PRODUCT } from "../data";
 
 interface ImageViewProps {
   getQuantity: (memberId: string, productId: string) => number;
@@ -79,7 +79,12 @@ export function ImageView({
 }: ImageViewProps) {
   const imgRef = useRef<HTMLImageElement>(null);
   const [imgSize, setImgSize] = useState({ w: 0, h: 0 });
-  const [showLimitMsg, setShowLimitMsg] = useState(false);
+  const [limitMsg, setLimitMsg] = useState<string | null>(null);
+
+  const showLimit = useCallback((msg: string) => {
+    setLimitMsg(msg);
+    setTimeout(() => setLimitMsg(null), 3000);
+  }, []);
 
   const updateSize = useCallback(() => {
     if (imgRef.current) {
@@ -110,9 +115,9 @@ export function ImageView({
 
   return (
     <div className="w-full select-none overflow-hidden relative">
-      {showLimitMsg && (
-        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-50 bg-red-600 text-white text-sm font-bold px-4 py-2 rounded-lg shadow-lg animate-bounce">
-          セットは1会計につき合計2個までです
+      {limitMsg && (
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-50 bg-red-600 text-white text-sm font-bold px-4 py-2 rounded-lg shadow-lg animate-bounce whitespace-nowrap">
+          {limitMsg}
         </div>
       )}
       <div className="relative inline-block w-full">
@@ -135,10 +140,17 @@ export function ImageView({
               const handleSetChange = (key: string, v: number) => {
                 const current = getQuantity(member.id, key);
                 if (v > current && totalSets >= MAX_SETS_PER_ORDER) {
-                  setShowLimitMsg(true);
-                  setTimeout(() => setShowLimitMsg(false), 3000);
+                  showLimit("セットは1会計につき合計2個までです");
                 }
                 setQuantity(member.id, key, v);
+              };
+
+              const handleProductChange = (productId: string, v: number) => {
+                const current = getQuantity(member.id, productId);
+                if (v > current && v > MAX_PER_PRODUCT) {
+                  showLimit(`各商品は${MAX_PER_PRODUCT}個までです`);
+                }
+                setQuantity(member.id, productId, v);
               };
 
               return (
@@ -157,7 +169,7 @@ export function ImageView({
                     <OverlayInput
                       key={p.id}
                       value={getQuantity(member.id, p.id)}
-                      onChange={(v) => setQuantity(member.id, p.id, v)}
+                      onChange={(v) => handleProductChange(p.id, v)}
                       style={pos(COL_PRODUCTS[pi].x, y, COL_PRODUCTS[pi].w, h)}
                     />
                   ))}
@@ -169,7 +181,13 @@ export function ImageView({
               <OverlayInput
                 key={product.id}
                 value={getCommonQuantity(product.id)}
-                onChange={(v) => setCommonQuantity(product.id, v)}
+                onChange={(v) => {
+                  const current = getCommonQuantity(product.id);
+                  if (v > current && v > MAX_PER_PRODUCT) {
+                    showLimit(`各商品は${MAX_PER_PRODUCT}個までです`);
+                  }
+                  setCommonQuantity(product.id, v);
+                }}
                 style={pos(COMMON_COLS[i].x, COMMON_Y, COMMON_COLS[i].w, COMMON_H)}
               />
             ))}
