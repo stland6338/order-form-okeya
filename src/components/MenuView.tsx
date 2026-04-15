@@ -50,6 +50,14 @@ function buildMenu1(): Record<string, CellCoord> {
     const setH = r.setB - r.setT;
     const halfH = Math.floor(setH / 2);
 
+    // セット全体の枠 (大きなセル)
+    cells[`${r.name}-set-full`] = {
+      x: 110,
+      y: r.setT,
+      w: 2151, // 110 → 2261
+      h: setH,
+    };
+
     // セットA/B (トートバッグ位置)
     cells[`${r.name}-set-A`] = {
       x: bagX,
@@ -118,6 +126,14 @@ function buildMenu2(): Record<string, CellCoord> {
     const setH = r.setB - r.setT;
     const halfH = Math.floor(setH / 2);
 
+    // セット全体の枠 (大きなセル)
+    cells[`${r.name}-set-full`] = {
+      x: 103,
+      y: r.setT,
+      w: 2150, // 103 → 2253
+      h: setH,
+    };
+
     cells[`${r.name}-set-A`] = {
       x: bagX,
       y: r.setT,
@@ -185,6 +201,13 @@ function QuantityBadge({ value }: { value: number }) {
   );
 }
 
+function SetFrame({ active }: { active: boolean }) {
+  if (!active) return null;
+  return (
+    <div className="absolute inset-0 pointer-events-none border-[3px] border-yellow-500 rounded-md shadow-[0_0_0_2px_rgba(250,204,21,0.3)]" />
+  );
+}
+
 export function MenuView({
   getQuantity,
   getCommonQuantity,
@@ -204,8 +227,16 @@ export function MenuView({
           const setBKey = `${member.set.id}-B`;
           const setACell = M1_CELLS[`${member.id}-set-A`];
           const setBCell = M1_CELLS[`${member.id}-set-B`];
+          const setFullCell = M1_CELLS[`${member.id}-set-full`];
+          const setTotal =
+            getQuantity(member.id, setAKey) + getQuantity(member.id, setBKey);
           return (
             <div key={member.id}>
+              {setFullCell && (
+                <div className="absolute" style={pct(setFullCell, M1_W, M1_H)}>
+                  <SetFrame active={setTotal > 0} />
+                </div>
+              )}
               {setACell && (
                 <div className="absolute" style={pct(setACell, M1_W, M1_H)}>
                   <QuantityBadge value={getQuantity(member.id, setAKey)} />
@@ -248,8 +279,16 @@ export function MenuView({
           const setBKey = `${member.set.id}-B`;
           const setACell = M2_CELLS[`${member.id}-set-A`];
           const setBCell = M2_CELLS[`${member.id}-set-B`];
+          const setFullCell = M2_CELLS[`${member.id}-set-full`];
+          const setTotal =
+            getQuantity(member.id, setAKey) + getQuantity(member.id, setBKey);
           return (
             <div key={member.id}>
+              {setFullCell && (
+                <div className="absolute" style={pct(setFullCell, M2_W, M2_H)}>
+                  <SetFrame active={setTotal > 0} />
+                </div>
+              )}
               {setACell && (
                 <div className="absolute" style={pct(setACell, M2_W, M2_H)}>
                   <QuantityBadge value={getQuantity(member.id, setAKey)} />
