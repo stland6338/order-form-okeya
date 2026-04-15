@@ -1,11 +1,21 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { MEMBERS, COMMON_PRODUCTS } from "./data";
 import { useOrderState } from "./hooks/useOrderState";
 import { Header } from "./components/Header";
 import { OrderSummary } from "./components/OrderSummary";
 import { ImageView } from "./components/ImageView";
+import { MenuView } from "./components/MenuView";
+
+type ViewMode = "sheet" | "menu";
+
+const TABS: { mode: ViewMode; label: string }[] = [
+  { mode: "sheet", label: "注文票" },
+  { mode: "menu", label: "お品書き" },
+];
 
 function App() {
+  const [viewMode, setViewMode] = useState<ViewMode>("sheet");
+
   const {
     order,
     setQuantity,
@@ -63,13 +73,34 @@ function App() {
     <div className="min-h-screen bg-gray-50 pb-20">
       <Header />
 
-      <ImageView
-        getQuantity={getQuantity}
-        setQuantity={setQuantity}
-        getCommonQuantity={getCommonQuantity}
-        setCommonQuantity={setCommonQuantity}
-        totalSets={totalSets}
-      />
+      {/* ビュー切り替えタブ */}
+      <div className="flex border-b border-gray-200 bg-white">
+        {TABS.map((tab) => (
+          <button
+            key={tab.mode}
+            onClick={() => setViewMode(tab.mode)}
+            className={`flex-1 py-2 text-sm font-medium text-center border-b-2 transition-colors ${
+              viewMode === tab.mode
+                ? "border-gray-800 text-gray-900"
+                : "border-transparent text-gray-400"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {viewMode === "sheet" ? (
+        <ImageView
+          getQuantity={getQuantity}
+          setQuantity={setQuantity}
+          getCommonQuantity={getCommonQuantity}
+          setCommonQuantity={setCommonQuantity}
+          totalSets={totalSets}
+        />
+      ) : (
+        <MenuView />
+      )}
 
       <OrderSummary
         total={total}
