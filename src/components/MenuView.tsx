@@ -13,51 +13,73 @@ const M2_H = 4013;
 
 type CellCoord = { x: number; y: number; w: number; h: number };
 
-// === menu1.jpg ===
-// 測定値:
-// りこ:   set+acsta y=228-702(h=474), products y=948-1239(h=291)
-// ナナ:   set+acsta y=1545-2007(h=462), products y=2262-2583(h=321)
-// 綺沙良: set+acsta y=2871-3321(h=450), products y=3579-3897(h=318)
-//
-// セットはトートバッグA/Bの位置に個別オーバーレイ（右側、上下分割）
-// トートバッグエリア: x≈1440-2290 (右側の約30%)
-// A: 上半分, B: 下半分
+// === menu1.jpg 実測値 ===
+// 水平境界: 105-737, 774-1317, 1437-2064, 2101-2644, 2758-3394, 3426-3969
+// 垂直境界(set): 110-2261(set), 2306-2809(acsta)
+// 垂直境界(prod): 110-617, 658-1165, 1206-1713, 1758-2261, 2306-2809
+// セット内トートバッグA/B分割: x=1354 (右半分)
 
 function buildMenu1(): Record<string, CellCoord> {
-  const rows = [
-    { setY: 228, setH: 474, prodY: 948, prodH: 291 }, // りこ
-    { setY: 1545, setH: 462, prodY: 2262, prodH: 321 }, // ナナ
-    { setY: 2871, setH: 450, prodY: 3579, prodH: 318 }, // 綺沙良
-  ];
-  const members = ["riko", "nana", "kisara"];
   const cells: Record<string, CellCoord> = {};
 
-  // 通常商品5セルの幅
-  const prodCellW = Math.floor((2894 - 60) / 5);
-  const prodStartX = 30;
+  // 各メンバーの行境界
+  const rows = [
+    { name: "riko", setT: 105, setB: 737, prodT: 774, prodB: 1317 },
+    { name: "nana", setT: 1437, setB: 2064, prodT: 2101, prodB: 2644 },
+    { name: "kisara", setT: 2758, setB: 3394, prodT: 3426, prodB: 3969 },
+  ];
 
-  // トートバッグA/B位置 (セット内右側)
-  const bagX = 1440;
-  const bagW = 850;
+  // 商品セルのX座標
+  const productCols = [
+    { x: 110, w: 507 },   // 1
+    { x: 658, w: 507 },   // 2
+    { x: 1206, w: 507 },  // 3
+    { x: 1758, w: 503 },  // 4
+    { x: 2306, w: 503 },  // 5
+  ];
 
-  // アクスタ位置
-  const acstaX = 2310;
-  const acstaW = 554;
+  // セット内トートバッグA/B位置
+  const bagX = 1354;
+  const bagW = 907; // 1354 → 2261
 
-  members.forEach((m, i) => {
-    const r = rows[i];
-    const halfH = Math.floor(r.setH / 2);
-    cells[`${m}-set-A`] = { x: bagX, y: r.setY, w: bagW, h: halfH };
-    cells[`${m}-set-B`] = { x: bagX, y: r.setY + halfH, w: bagW, h: r.setH - halfH };
-    cells[`${m}-acsta`] = { x: acstaX, y: r.setY, w: acstaW, h: r.setH };
+  // アクスタ
+  const acstaX = 2306;
+  const acstaW = 503;
 
+  rows.forEach((r) => {
+    const setH = r.setB - r.setT;
+    const halfH = Math.floor(setH / 2);
+
+    // セットA/B (トートバッグ位置)
+    cells[`${r.name}-set-A`] = {
+      x: bagX,
+      y: r.setT,
+      w: bagW,
+      h: halfH,
+    };
+    cells[`${r.name}-set-B`] = {
+      x: bagX,
+      y: r.setT + halfH,
+      w: bagW,
+      h: setH - halfH,
+    };
+
+    // アクスタ
+    cells[`${r.name}-acsta`] = {
+      x: acstaX,
+      y: r.setT,
+      w: acstaW,
+      h: setH,
+    };
+
+    // 商品セル(アクキー, チェキ, キラステッカー, 旧アクキー, 旧ステッカー)
     const products = ["ackey", "cheki", "kira", "old-ackey", "old-sticker"];
-    products.forEach((p, idx) => {
-      cells[`${m}-${p}`] = {
-        x: prodStartX + idx * prodCellW,
-        y: r.prodY,
-        w: prodCellW,
-        h: r.prodH,
+    products.forEach((p, i) => {
+      cells[`${r.name}-${p}`] = {
+        x: productCols[i].x,
+        y: r.prodT,
+        w: productCols[i].w,
+        h: r.prodB - r.prodT,
       };
     });
   });
@@ -65,52 +87,70 @@ function buildMenu1(): Record<string, CellCoord> {
   return cells;
 }
 
-// === menu2.jpg ===
-// 桃音:   set+acsta y=120-624(h=504), products y=852-1221(h=369)
-// ルンルン: set+acsta y=1398-1932(h=534), products y=2196-2493(h=297)
-// 共通商品: y=2802-3258(h=456), 2セル横並び
+// === menu2.jpg 実測値 ===
+// 水平境界: 25-657, 693-1236, 1352-1983, 2020-2567, 2681-3308
+// 垂直境界(set): 103-2253(set), 2298-2801(acsta)
+// 垂直境界(prod): 103-610, 651-1158, 1198-1710, 1746-2253, 2298-2801
+// 共通商品: 103-1422, 1459-2801
+
 function buildMenu2(): Record<string, CellCoord> {
-  const rows = [
-    { setY: 120, setH: 504, prodY: 852, prodH: 369 }, // 桃音
-    { setY: 1398, setH: 534, prodY: 2196, prodH: 297 }, // ルンルン
-  ];
-  const members = ["moone", "runrun"];
   const cells: Record<string, CellCoord> = {};
 
-  const prodCellW = Math.floor((2894 - 60) / 5);
-  const prodStartX = 30;
-  const bagX = 1440;
-  const bagW = 850;
-  const acstaX = 2310;
-  const acstaW = 554;
+  const rows = [
+    { name: "moone", setT: 25, setB: 657, prodT: 693, prodB: 1236 },
+    { name: "runrun", setT: 1352, setB: 1983, prodT: 2020, prodB: 2567 },
+  ];
 
-  members.forEach((m, i) => {
-    const r = rows[i];
-    const halfH = Math.floor(r.setH / 2);
-    cells[`${m}-set-A`] = { x: bagX, y: r.setY, w: bagW, h: halfH };
-    cells[`${m}-set-B`] = { x: bagX, y: r.setY + halfH, w: bagW, h: r.setH - halfH };
-    cells[`${m}-acsta`] = { x: acstaX, y: r.setY, w: acstaW, h: r.setH };
+  const productCols = [
+    { x: 103, w: 507 },
+    { x: 651, w: 507 },
+    { x: 1198, w: 512 },
+    { x: 1746, w: 507 },
+    { x: 2298, w: 503 },
+  ];
+
+  const bagX = 1328;
+  const bagW = 925; // 1328 → 2253
+  const acstaX = 2298;
+  const acstaW = 503;
+
+  rows.forEach((r) => {
+    const setH = r.setB - r.setT;
+    const halfH = Math.floor(setH / 2);
+
+    cells[`${r.name}-set-A`] = {
+      x: bagX,
+      y: r.setT,
+      w: bagW,
+      h: halfH,
+    };
+    cells[`${r.name}-set-B`] = {
+      x: bagX,
+      y: r.setT + halfH,
+      w: bagW,
+      h: setH - halfH,
+    };
+    cells[`${r.name}-acsta`] = {
+      x: acstaX,
+      y: r.setT,
+      w: acstaW,
+      h: setH,
+    };
 
     const products = ["ackey", "cheki", "kira", "old-ackey", "old-sticker"];
-    products.forEach((p, idx) => {
-      cells[`${m}-${p}`] = {
-        x: prodStartX + idx * prodCellW,
-        y: r.prodY,
-        w: prodCellW,
-        h: r.prodH,
+    products.forEach((p, i) => {
+      cells[`${r.name}-${p}`] = {
+        x: productCols[i].x,
+        y: r.prodT,
+        w: productCols[i].w,
+        h: r.prodB - r.prodT,
       };
     });
   });
 
-  // 共通商品 (横並び2セル)
-  const commonCellW = Math.floor((2894 - 60) / 2);
-  cells["flake-seal"] = { x: 30, y: 2802, w: commonCellW, h: 456 };
-  cells["acrylic-parts"] = {
-    x: 30 + commonCellW,
-    y: 2802,
-    w: commonCellW,
-    h: 456,
-  };
+  // 共通商品
+  cells["flake-seal"] = { x: 103, y: 2681, w: 1319, h: 627 };
+  cells["acrylic-parts"] = { x: 1459, y: 2681, w: 1342, h: 627 };
 
   return cells;
 }
