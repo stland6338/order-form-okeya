@@ -123,7 +123,7 @@ export function ImageView({
       <div className="relative inline-block w-full">
         <img
           ref={imgRef}
-          src="/sheet2.jpg"
+          src="/sheet_fix.jpg"
           alt="注文票"
           className="block w-full h-auto"
           draggable={false}

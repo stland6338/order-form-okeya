@@ -19,8 +19,8 @@ function createMember(
     products: [
       { id: `${id}-acsta`, name: `${startNum + 1}. アクスタ`, price: 1500, inSet: false },
       { id: `${id}-ackey`, name: `${startNum + 2}. アクキー`, price: 800, inSet: true },
-      { id: `${id}-cheki`, name: `${startNum + 3}. チェキ`, price: 200, inSet: true },
-      { id: `${id}-kira`, name: `${startNum + 4}. キラステッカー`, price: 300, inSet: true },
+      { id: `${id}-cheki`, name: `${startNum + 3}. チェキ`, price: 300, inSet: true },
+      { id: `${id}-kira`, name: `${startNum + 4}. キラステッカー`, price: 200, inSet: true },
       { id: `${id}-old-ackey`, name: `${startNum + 5}. 旧アクキー`, price: 800, inSet: false },
       { id: `${id}-old-sticker`, name: `${startNum + 6}. 旧ステッカー`, price: 200, inSet: false },
     ],
